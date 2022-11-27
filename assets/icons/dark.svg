@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="55" height="21" viewBox="0 0 55 21">
+    <g data-name="Group 16783">
+        <g style="fill:#024b5a;stroke:#558690;stroke-miterlimit:10;stroke-width:1.5px">
+            <rect width="55" height="21" rx="10.5" style="stroke:none"/>
+            <rect x=".75" y=".75" width="53.5" height="19.5" rx="9.75" style="fill:none"/>
+        </g>
+        <text transform="translate(22 14)" style="fill:#f0f3f7;font-size:11px;font-family:SFProDisplay-Heavy,SF Pro Display;font-weight:800"><tspan x="0" y="0">Dark</tspan></text>
+        <path d="M4.854 0a4.854 4.854 0 1 0 4.832 5.323.285.285 0 0 0-.464-.249A2.855 2.855 0 1 1 5.717.566a.286.286 0 0 0-.128-.511A4.89 4.89 0 0 0 4.854 0z" style="fill:#558690" transform="translate(7.471 5.646)" data-name="Moon"/>
+    </g>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="63" height="21" viewBox="0 0 63 21">
+    <g data-name="Group 17888">
+        <g style="fill:#024b5a;stroke:#558690;stroke-miterlimit:10;stroke-width:1.5px">
+            <rect width="63" height="21" rx="10.5" style="stroke:none"/>
+            <rect x=".75" y=".75" width="61.5" height="19.5" rx="9.75" style="fill:none"/>
+        </g>
+        <text transform="translate(25 14)" style="fill:#f0f3f7;font-size:11px;font-family:SFProDisplay-Heavy,SF Pro Display;font-weight:800"><tspan x="0" y="0">Light</tspan></text>
+        <g data-name="Sun">
+            <path d="M.338 0a.338.338 0 0 1 .338.338v.45a.338.338 0 0 1-.676 0v-.45A.338.338 0 0 1 .338 0z" transform="translate(11.798 5.656)" style="fill:#558690"/>
+            <path data-name="Path" d="M2.591 0a2.591 2.591 0 1 0 2.59 2.591A2.591 2.591 0 0 0 2.591 0z" transform="translate(9.545 7.909)" style="fill:#558690"/>
+            <path data-name="Path" d="M.577.1A.338.338 0 0 0 .1.577L.418.9A.338.338 0 1 0 .9.418z" transform="translate(8.612 6.976)" style="fill:#558690"/>
+            <path data-name="Path" d="M1.126.338a.338.338 0 0 1-.338.338h-.45a.338.338 0 0 1 0-.676h.45a.338.338 0 0 1 .338.338z" transform="translate(15.853 10.162)" style="fill:#558690"/>
+            <path data-name="Path" d="M.9.577A.338.338 0 0 0 .418.1L.1.418A.338.338 0 0 0 .577.9z" transform="translate(14.665 6.976)" style="fill:#558690"/>
+            <path data-name="Path" d="M.338 0a.338.338 0 0 1 .338.338v.45a.338.338 0 0 1-.676 0v-.45A.338.338 0 0 1 .338 0z" transform="translate(11.798 14.217)" style="fill:#558690"/>
+            <path data-name="Path" d="M.577.1A.338.338 0 0 0 .1.577L.418.9A.338.338 0 0 0 .9.418z" transform="translate(14.665 13.029)" style="fill:#558690"/>
+            <path data-name="Path" d="M1.126.338a.338.338 0 0 1-.338.338h-.45a.338.338 0 0 1 0-.676h.45a.338.338 0 0 1 .338.338z" transform="translate(7.292 10.162)" style="fill:#558690"/>
+            <path data-name="Path" d="M.9.577A.338.338 0 1 0 .418.1L.1.418A.338.338 0 0 0 .577.9z" transform="translate(8.612 13.029)" style="fill:#558690"/>
+        </g>
+    </g>
+</svg>
