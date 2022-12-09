@@ -14,4 +14,5 @@ abstract class Routes {
   static const placesSearch = '/places-search';
   static const tracking = '/tracking';
   static const speedometerMap = '/speedometer-map';
+  static const addChild = '/add-child';
 }

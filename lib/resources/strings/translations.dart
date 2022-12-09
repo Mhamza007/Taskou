@@ -143,6 +143,14 @@ class AppTranslations extends Translations {
           'share_code': 'Share Code',
           'delete': 'Delete',
           'tracking': 'Tracking',
+          'add': 'Add',
+          'child_name': 'Child Name',
+          'enter_child_name': 'Enter Child Name',
+          'relation': 'Relation',
+          'enter_relation': 'Enter Relation',
+          'child': 'Child',
+          'employee': 'Employee',
+          'cancel': 'Cancel',
         },
       };
 }

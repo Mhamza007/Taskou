@@ -14,7 +14,19 @@ class TrackingScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => TrackingCubit(context),
       child: BlocConsumer<TrackingCubit, TrackingState>(
-        listener: (context, state) {},
+        listenWhen: (prev, curr) =>
+            prev.apiResponseStatus != curr.apiResponseStatus,
+        listener: (context, state) {
+          switch (state.apiResponseStatus) {
+            case ApiResponseStatus.failure:
+              Helpers.errorSnackBar(
+                context: context,
+                title: state.message,
+              );
+              break;
+            default:
+          }
+        },
         builder: (context, state) {
           var cubit = context.read<TrackingCubit>();
 
@@ -35,6 +47,17 @@ class TrackingScreen extends StatelessWidget {
               title: Text(
                 Res.string.tracking,
               ),
+              actions: [
+                TextButton(
+                  onPressed: cubit.goToAddChild,
+                  child: Text(
+                    Res.string.add,
+                    style: TextStyle(
+                      color: Res.colors.whiteColor,
+                    ),
+                  ),
+                ),
+              ],
             ),
             body: Column(
               children: [
@@ -42,7 +65,7 @@ class TrackingScreen extends StatelessWidget {
                   controller: cubit.searchController,
                 ),
                 Expanded(
-                  child: resultList == null
+                  child: resultList == null || state.loading
                       ? const Center(
                           child: CircularProgressIndicator(),
                         )

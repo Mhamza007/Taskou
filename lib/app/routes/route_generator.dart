@@ -89,6 +89,10 @@ class RouteGenerator {
         return _PageTransition(
           child: const TrackingScreen(),
         );
+      case Routes.addChild:
+        return _PageTransition(
+          child: const AddChildScreen(),
+        );
       case Routes.speedometerMap:
         return _PageTransition(
           child: const SpeedometerMapScreen(),

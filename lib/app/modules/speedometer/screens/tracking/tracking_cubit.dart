@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -122,6 +122,16 @@ class TrackingCubit extends Cubit<TrackingState> {
     }
   }
 
+  void goToAddChild() async {
+    var addChild = await Navigator.pushNamed(
+      context,
+      Routes.addChild,
+    );
+    if (addChild == true) {
+      getTrackingData();
+    }
+  }
+
   void filter() {
     if (state.trackingData != null && state.trackingData!.isNotEmpty) {
       var query = searchController.text;
@@ -162,7 +172,123 @@ class TrackingCubit extends Cubit<TrackingState> {
     }
   }
 
-  Future<void> deleteItem(TrackingResponseData item) async {}
+  Future<void> deleteItem(TrackingResponseData item) async {
+    showCupertinoDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            Res.string.delete,
+            style: TextStyle(
+              color: Res.colors.redColor,
+            ),
+          ),
+          content: Text(
+            '${item.name} will be deleted',
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: Text(
+                Res.string.cancel,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(
+                Res.string.delete,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                deleteChild(item);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> deleteChild(TrackingResponseData item) async {
+    try {
+      emit(
+        state.copyWith(
+          loading: true,
+        ),
+      );
+      var isConnected = await NetworkService().getConnectivity();
+      if (isConnected) {
+        var userToken = _userStorage.getUserToken();
+        if (userToken != null) {
+          var response = await _trackingServiceApi.deleteChild(
+            userToken: userToken,
+            childId: item.id ?? '',
+          );
+
+          if (response?.statusCode == 200) {
+            emit(
+              state.copyWith(
+                apiResponseStatus: ApiResponseStatus.success,
+                message: response?.message ?? Res.string.success,
+              ),
+            );
+            getTrackingData();
+          } else {
+            emit(
+              state.copyWith(
+                apiResponseStatus: ApiResponseStatus.failure,
+                message: response?.message ?? Res.string.apiErrorMessage,
+              ),
+            );
+          }
+        } else {
+          emit(
+            state.copyWith(
+              apiResponseStatus: ApiResponseStatus.failure,
+              message: Res.string.userAuthFailedLoginAgain,
+            ),
+          );
+        }
+      } else {
+        emit(
+          state.copyWith(
+            apiResponseStatus: ApiResponseStatus.failure,
+            message: Res.string.youAreInOfflineMode,
+          ),
+        );
+      }
+    } on NetworkException catch (e) {
+      emit(
+        state.copyWith(
+          apiResponseStatus: ApiResponseStatus.failure,
+          message: e.toString(),
+        ),
+      );
+    } on ResponseException catch (e) {
+      emit(
+        state.copyWith(
+          apiResponseStatus: ApiResponseStatus.failure,
+          message: e.toString(),
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          apiResponseStatus: ApiResponseStatus.failure,
+          message: Res.string.apiErrorMessage,
+        ),
+      );
+    } finally {
+      emit(
+        state.copyWith(
+          loading: false,
+          apiResponseStatus: ApiResponseStatus.none,
+        ),
+      );
+    }
+  }
 
   Future<void> openItem(TrackingResponseData item) async {
     Navigator.pushNamed(

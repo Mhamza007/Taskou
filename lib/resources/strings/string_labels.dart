@@ -109,4 +109,12 @@ class Strings {
   String get shareCode => 'share_code'.tr;
   String get delete => 'delete'.tr;
   String get tracking => 'tracking'.tr;
+  String get add => 'add'.tr;
+  String get childName => 'child_name'.tr;
+  String get enterChildName => 'enter_child_name'.tr;
+  String get relation => 'relation'.tr;
+  String get enterRelation => 'enter_relation'.tr;
+  String get child => 'child'.tr;
+  String get employee => 'employee'.tr;
+  String get cancel => 'cancel'.tr;
 }

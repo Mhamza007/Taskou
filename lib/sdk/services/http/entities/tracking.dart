@@ -39,4 +39,54 @@ class TrackingServiceApi {
       rethrow;
     }
   }
+
+  Future<AddDeleteChildResponse?> addChild({
+    required String userToken,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      dioBase?.options.headers.addAll({
+        'user_token': Constants.userToken,
+      });
+      var response = await dioBase?.post(
+        'addChild',
+        data: data,
+      );
+      if (response != null) {
+        return AddDeleteChildResponse.fromJson(response);
+      } else {
+        throw NetworkException(
+          'No response data from server',
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<AddDeleteChildResponse?> deleteChild({
+    required String userToken,
+    required String childId,
+  }) async {
+    try {
+      dioBase?.options.headers.addAll({
+        'user_token': Constants.userToken,
+      });
+      var response = await dioBase?.post(
+        'deleteChild',
+        data: {
+          'child_id': childId,
+        },
+      );
+      if (response != null) {
+        return AddDeleteChildResponse.fromJson(response);
+      } else {
+        throw NetworkException(
+          'No response data from server',
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
