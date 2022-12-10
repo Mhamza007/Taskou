@@ -89,4 +89,27 @@ class TrackingServiceApi {
       rethrow;
     }
   }
+
+  Future<ChildModeResponse?> childMode({
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      dioBase?.options.headers.addAll({
+        'user_token': Constants.testDeviceToken,
+      });
+      var response = await dioBase?.post(
+        'verifyCode',
+        data: data,
+      );
+      if (response != null) {
+        return ChildModeResponse.fromJson(response);
+      } else {
+        throw NetworkException(
+          'No response data from server',
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

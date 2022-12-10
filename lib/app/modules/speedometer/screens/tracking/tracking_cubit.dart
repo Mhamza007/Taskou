@@ -58,6 +58,7 @@ class TrackingCubit extends Cubit<TrackingState> {
             emit(
               state.copyWith(
                 apiResponseStatus: ApiResponseStatus.success,
+                message: response?.message ?? Res.string.success,
                 trackingData: response?.data,
               ),
             );

@@ -152,6 +152,8 @@ class AppTranslations extends Translations {
           'employee': 'Employee',
           'cancel': 'Cancel',
           'error_logging_out': 'An error occurred while logging out',
+          'submit': 'Submit',
+          'enter_code_here': 'Enter your code here',
         },
       };
 }

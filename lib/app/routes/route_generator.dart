@@ -97,6 +97,10 @@ class RouteGenerator {
         return _PageTransition(
           child: const SpeedometerMapScreen(),
         );
+      case Routes.childMode:
+        return _PageTransition(
+          child: const ChildModeScreen(),
+        );
       // case Routes.sync_home:
       //   return _PageTransition(
       //     child: SyncScreen(),

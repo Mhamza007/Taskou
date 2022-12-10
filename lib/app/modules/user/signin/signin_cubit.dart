@@ -247,6 +247,7 @@ class SignInCubit extends Cubit<SignInState> {
 
   void childMode() {
     debugPrint('child mode');
+    Navigator.pushNamed(context, Routes.childMode);
   }
 
   void signup() {

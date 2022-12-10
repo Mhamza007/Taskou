@@ -312,9 +312,11 @@ class SignUpScreen extends StatelessWidget {
                                     TextSpan(
                                       text:
                                           '${Res.string.bySigningUpYouAgreeToOur}\n',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                      ),
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .copyWith(
+                                            fontSize: 16,
+                                          ),
                                     ),
                                     TextSpan(
                                       text: Res.string.termsConditions,
@@ -329,9 +331,11 @@ class SignUpScreen extends StatelessWidget {
                                     ),
                                     TextSpan(
                                       text: ' ${Res.string.and} ',
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      ),
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .copyWith(
+                                            fontSize: 12,
+                                          ),
                                     ),
                                     TextSpan(
                                       text: 'Privacy Policy',
@@ -392,6 +396,7 @@ class SignUpScreen extends StatelessWidget {
                                   children: [
                                     TextSpan(
                                       text: Res.string.alreadyHaveAnAccount,
+                                      style: DefaultTextStyle.of(context).style,
                                     ),
                                     const TextSpan(text: '  '),
                                     TextSpan(

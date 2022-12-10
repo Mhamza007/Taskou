@@ -152,17 +152,18 @@ class SignInScreen extends StatelessWidget {
                                     horizontal: 32,
                                   ),
                           ),
-                        ).paddingOnly(bottom: 16),
+                        ).paddingOnly(bottom: 8),
 
                         // Child Mode
                         Center(
-                          child: Text(
-                            Res.string.childMode,
-                            style: const TextStyle(
-                              decoration: TextDecoration.underline,
+                          child: TextButton(
+                            onPressed: signInCubit.childMode,
+                            child: Text(
+                              Res.string.childMode,
+                              style: const TextStyle(
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
-                          ).onTap(
-                            signInCubit.childMode,
                           ),
                         ).paddingOnly(bottom: 16),
                         const Spacer(),
@@ -174,6 +175,7 @@ class SignInScreen extends StatelessWidget {
                               children: [
                                 TextSpan(
                                   text: Res.string.dontHaveAnAccount,
+                                  style: DefaultTextStyle.of(context).style,
                                 ),
                                 const TextSpan(text: '  '),
                                 TextSpan(

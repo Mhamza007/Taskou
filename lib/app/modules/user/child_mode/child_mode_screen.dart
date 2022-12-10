@@ -7,22 +7,35 @@ import 'package:reactive_forms/reactive_forms.dart' as forms;
 import '../../../../resources/resources.dart';
 import '../../../app.dart';
 
-class ForgotPasswordScreen extends StatelessWidget {
-  const ForgotPasswordScreen({super.key});
+class ChildModeScreen extends StatelessWidget {
+  const ChildModeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ForgotPasswordCubit(context),
+      create: (context) => ChildModeCubit(context),
       child: Scaffold(
-        body: BlocBuilder<ForgotPasswordCubit, ForgotPasswordState>(
+        body: BlocConsumer<ChildModeCubit, ChildModeState>(
+          listenWhen: (prev, curr) =>
+              prev.apiResponseStatus != curr.apiResponseStatus,
+          listener: (context, state) {
+            switch (state.apiResponseStatus) {
+              case ApiResponseStatus.failure:
+                Helpers.errorSnackBar(
+                  context: context,
+                  title: state.message,
+                );
+                break;
+              default:
+            }
+          },
           builder: (context, state) {
-            var forgotPasswordCubit = context.read<ForgotPasswordCubit>();
+            var cubit = context.read<ChildModeCubit>();
             return SafeArea(
               child: GestureDetector(
-                onTap: forgotPasswordCubit.forgotPasswordForm.unfocus,
+                onTap: cubit.childModeForm.unfocus,
                 child: forms.ReactiveForm(
-                  formGroup: forgotPasswordCubit.forgotPasswordForm,
+                  formGroup: cubit.childModeForm,
                   child: Stack(
                     children: [
                       Column(
@@ -34,18 +47,26 @@ class ForgotPasswordScreen extends StatelessWidget {
                             Res.drawable.appLogo,
                           ).paddingSymmetric(horizontal: 20),
                           const SizedBox(height: 32),
+                          Center(
+                            child: Text(
+                              Res.string.enterCodeHere,
+                              style: const TextStyle(
+                                fontSize: 20.0,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 32),
 
-                          // Phone Number field
-                          ReactivePhoneNumberField(
-                            countryCodeControlName:
-                                AuthForms.countryCodeControl,
-                            phoneNumberControlName: AuthForms.userMobileControl,
-                            flag: state.flag,
-                            hint: Res.string.phoneNumber,
-                            maxLength: state.maxLength,
-                            title: Res.string.phoneNumber,
-                            pickCountry: (p0) {
-                              forgotPasswordCubit.selectCountry();
+                          // Code Field
+                          ReactiveTextField(
+                            formControlName: ChildModeForms.codeControl,
+                            textAlign: TextAlign.center,
+                            hint: Res.string.enterCodeHere,
+                            keyboardType: TextInputType.text,
+                            inputAction: TextInputAction.go,
+                            validationMessages: {
+                              forms.ValidationMessage.required: (_) =>
+                                  Res.string.thisFieldIsRequired,
                             },
                           ).paddingOnly(
                             bottom: 16,
@@ -54,8 +75,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                           SizedBox(
                             width: double.maxFinite,
                             child: ElevatedButton(
-                              onPressed:
-                                  forgotPasswordCubit.onSendButtonPressed,
+                              onPressed: cubit.submit,
                               style: ButtonStyle(
                                 elevation: MaterialStateProperty.all(0.0),
                                 shape: MaterialStateProperty.all(
@@ -65,7 +85,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                Res.string.send,
+                                Res.string.submit,
                                 style: TextStyle(
                                   color: Res.colors.whiteColor,
                                   fontSize: 24.0,

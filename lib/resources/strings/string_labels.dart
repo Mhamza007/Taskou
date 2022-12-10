@@ -118,4 +118,6 @@ class Strings {
   String get employee => 'employee'.tr;
   String get cancel => 'cancel'.tr;
   String get errorLoggingOut => 'error_logging_out'.tr;
+  String get submit => 'submit'.tr;
+  String get enterCodeHere => 'enter_code_here'.tr;
 }

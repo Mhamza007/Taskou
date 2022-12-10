@@ -15,4 +15,5 @@ abstract class Routes {
   static const tracking = '/tracking';
   static const speedometerMap = '/speedometer-map';
   static const addChild = '/add-child';
+  static const childMode = '/child-mode';
 }

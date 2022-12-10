@@ -69,6 +69,7 @@ class AppTheme {
       floatingLabelStyle: TextStyle(
         color: Res.colors.textColor,
       ),
+      suffixIconColor: Colors.black,
     ),
     textTheme: TextTheme(
       bodyText1: TextStyle(
@@ -171,6 +172,7 @@ class AppTheme {
       floatingLabelStyle: TextStyle(
         color: Res.colors.textColorDark,
       ),
+      suffixIconColor: Colors.white,
     ),
     textTheme: TextTheme(
       bodyText1: TextStyle(
