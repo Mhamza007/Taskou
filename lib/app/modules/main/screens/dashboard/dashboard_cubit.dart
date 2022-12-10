@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../db/db.dart';
 import '../../../../../resources/resources.dart';
+import '../../../../../sdk/sdk.dart';
 import '../../../../app.dart';
 part 'dashboard_state.dart';
 
@@ -11,6 +15,7 @@ class DashboardCubit extends Cubit<DashboardState> {
     this.context,
   ) : super(const DashboardState()) {
     scaffoldKey = GlobalKey<ScaffoldState>();
+    _userStorage = UserStorage();
 
     emit(
       state.copyWith(
@@ -18,6 +23,8 @@ class DashboardCubit extends Cubit<DashboardState> {
         currentPageTitle: Res.string.findServiceman,
       ),
     );
+
+    _getUserData();
   }
 
   final BuildContext context;
@@ -25,6 +32,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   BookingsCubit? bookingsCubit;
   ProfileCubit? profileCubit;
   late final GlobalKey<ScaffoldState> scaffoldKey;
+  late UserStorage _userStorage;
 
   void initFindServicemanCubit(FindServicemanCubit findServicemanCubit) {
     this.findServicemanCubit = findServicemanCubit;
@@ -45,6 +53,23 @@ class DashboardCubit extends Cubit<DashboardState> {
         themeMode: themeMode,
       ),
     );
+  }
+
+  void _getUserData() {
+    var userData = _userStorage.getUserData();
+    if (userData != null) {
+      UserLoginData userLoginData = UserLoginData.fromMap(
+        jsonDecode(userData),
+      );
+      emit(
+        state.copyWith(
+          imageUrl: userLoginData.profileImg,
+          userName:
+              '${userLoginData.firstName ?? ''} ${userLoginData.lastName ?? ''}',
+          phoneNumber: userLoginData.userMobile,
+        ),
+      );
+    }
   }
 
   void onItemSelected(int index) {
@@ -125,5 +150,36 @@ class DashboardCubit extends Cubit<DashboardState> {
         );
       },
     );
+  }
+
+  Future<void> logout() async {
+    try {
+      await Future.wait(
+        [
+          _userStorage.setUserId(null),
+          _userStorage.setUserMobile(null),
+          _userStorage.setUserToken(null),
+          _userStorage.setUserType(null),
+          _userStorage.setUserFirstName(null),
+          _userStorage.setUserLastName(null),
+          _userStorage.setUserDeviceToken(null),
+          _userStorage.setUserData(jsonEncode(null)),
+        ],
+      );
+
+      // Navigate to Login
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Routes.signIn,
+        (route) => false,
+      );
+    } catch (e) {
+      debugPrint('$e');
+      Helpers.errorSnackBar(
+        context: context,
+        title: Res.string.errorLoggingOut,
+      );
+    }
   }
 }

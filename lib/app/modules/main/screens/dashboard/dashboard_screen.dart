@@ -126,8 +126,10 @@ class DashboardScreen extends StatelessWidget {
             ),
             body: pages[state.selectedIndex],
             drawer: SideMenu(
-              userName: 'User Name',
-              phoneNumber: '+1-9017066652',
+              userName: state.userName,
+              phoneNumber: state.phoneNumber,
+              imageUrl: state.imageUrl,
+              logoutTap: dashboardCubit.logout,
             ),
             bottomNavigationBar: BottomNavigationBar(
               onTap: dashboardCubit.onItemSelected,

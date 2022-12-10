@@ -117,4 +117,5 @@ class Strings {
   String get child => 'child'.tr;
   String get employee => 'employee'.tr;
   String get cancel => 'cancel'.tr;
+  String get errorLoggingOut => 'error_logging_out'.tr;
 }

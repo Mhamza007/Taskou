@@ -1,5 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../../../resources/resources.dart';
 
@@ -8,6 +8,7 @@ class SideMenu extends StatelessWidget {
     super.key,
     required this.userName,
     required this.phoneNumber,
+    this.imageUrl,
     this.homeTap,
     this.supportTap,
     this.helpTap,
@@ -16,6 +17,7 @@ class SideMenu extends StatelessWidget {
 
   final String userName;
   final String phoneNumber;
+  final String? imageUrl;
   final Function()? homeTap;
   final Function()? supportTap;
   final Function()? helpTap;
@@ -41,6 +43,11 @@ class SideMenu extends StatelessWidget {
                     CircleAvatar(
                       radius: 60.0,
                       backgroundColor: Colors.white54,
+                      backgroundImage: imageUrl != null && imageUrl!.isNotEmpty
+                          ? CachedNetworkImageProvider(
+                              imageUrl!,
+                            )
+                          : null,
                     ),
                     const SizedBox(height: 16.0),
                     Text(
