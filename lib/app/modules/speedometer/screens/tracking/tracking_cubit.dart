@@ -295,6 +295,10 @@ class TrackingCubit extends Cubit<TrackingState> {
     Navigator.pushNamed(
       context,
       Routes.speedometerMap,
+      arguments: {
+        'data': item,
+        'mode': TrackingMode.relativeMode,
+      },
     );
   }
 }

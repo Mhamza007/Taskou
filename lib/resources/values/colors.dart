@@ -33,7 +33,7 @@ class AppColors {
   final profileAvatarBgColor = const Color(0xFFE4E4E4);
 
   final whiteColor = const Color(0xFFFFFFFF);
-  final blackColor = const Color(0xFFFFFFFF);
+  final blackColor = const Color(0xFF000000);
   final chestnutRedColor = const Color(0xFFD25D5D);
   final redColor = const Color(0xFFFF5D55);
   final hintTextColor = const Color(0xFFACB2BE);

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,6 +10,48 @@ import '../../../app.dart';
 
 class ChildModeScreen extends StatelessWidget {
   const ChildModeScreen({super.key});
+
+  _showTrackingDialogDialog(
+    BuildContext context,
+    ChildModeCubit cubit,
+  ) {
+    showCupertinoDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            Res.string.tracking,
+            style: TextStyle(
+              color: Res.colors.redColor,
+            ),
+          ),
+          content: Text(
+            Res.string.trackingQuestion,
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: Text(
+                Res.string.yes,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                cubit.submit();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(
+                Res.string.no,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +118,7 @@ class ChildModeScreen extends StatelessWidget {
                           SizedBox(
                             width: double.maxFinite,
                             child: ElevatedButton(
-                              onPressed: cubit.submit,
+                              onPressed: () => _showTrackingDialogDialog(context, cubit),
                               style: ButtonStyle(
                                 elevation: MaterialStateProperty.all(0.0),
                                 shape: MaterialStateProperty.all(
@@ -84,17 +127,23 @@ class ChildModeScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              child: Text(
-                                Res.string.submit,
-                                style: TextStyle(
-                                  color: Res.colors.whiteColor,
-                                  fontSize: 24.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ).paddingSymmetric(
-                                vertical: 12,
-                                horizontal: 24,
-                              ),
+                              child: state.loading
+                                  ? Center(
+                                      child: CircularProgressIndicator(
+                                        color: Res.colors.whiteColor,
+                                      ).paddingAll(8.0),
+                                    )
+                                  : Text(
+                                      Res.string.submit,
+                                      style: TextStyle(
+                                        color: Res.colors.whiteColor,
+                                        fontSize: 24.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ).paddingSymmetric(
+                                      vertical: 12,
+                                      horizontal: 24,
+                                    ),
                             ),
                           ),
                         ],

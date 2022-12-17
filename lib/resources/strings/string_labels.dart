@@ -120,4 +120,9 @@ class Strings {
   String get errorLoggingOut => 'error_logging_out'.tr;
   String get submit => 'submit'.tr;
   String get enterCodeHere => 'enter_code_here'.tr;
+  String get trackingQuestion => 'tracking_question'.tr;
+  String get yes => 'yes'.tr;
+  String get no => 'no'.tr;
+  String get of => 'of'.tr;
+  String get stop => 'stop'.tr;
 }

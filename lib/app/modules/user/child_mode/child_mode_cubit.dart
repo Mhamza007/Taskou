@@ -50,7 +50,10 @@ class ChildModeCubit extends Cubit<ChildModeState> {
             Navigator.pushNamed(
               context,
               Routes.speedometerMap,
-              arguments: response?.data,
+              arguments: {
+                'data': response?.data,
+                'mode': TrackingMode.childMode,
+              },
             );
           } else {
             emit(

@@ -43,6 +43,8 @@ dependencies:
   country_picker: ^2.0.16
   dio: ^4.0.6
   equatable: ^2.0.5
+  firebase_core: ^2.4.0
+  firebase_database: ^10.0.7
   flutter_bloc: ^8.1.1
   flutter_google_places: ^0.3.0
   flutter_rating_bar: ^4.0.1

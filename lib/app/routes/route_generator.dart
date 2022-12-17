@@ -94,8 +94,11 @@ class RouteGenerator {
           child: const AddChildScreen(),
         );
       case Routes.speedometerMap:
+        args as Map<String, dynamic>;
         return _PageTransition(
-          child: const SpeedometerMapScreen(),
+          child: SpeedometerMapScreen(
+            data: args,
+          ),
         );
       case Routes.childMode:
         return _PageTransition(

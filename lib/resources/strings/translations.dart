@@ -154,6 +154,11 @@ class AppTranslations extends Translations {
           'error_logging_out': 'An error occurred while logging out',
           'submit': 'Submit',
           'enter_code_here': 'Enter your code here',
+          'tracking_question': 'Do you want to track your Location and speed with your relative?',
+          'yes': 'Yes',
+          'no': 'No',
+          'of': 'of',
+          'stop': 'Stop',
         },
       };
 }
