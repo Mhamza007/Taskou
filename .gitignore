@@ -45,3 +45,9 @@ app.*.map.json
 
 # Secret Keys
 lib/configs/constants.dart
+macos/Runner/GoogleService-Info.plist
+macos/firebase_app_id_file.json
+ios/firebase_app_id_file.json
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
