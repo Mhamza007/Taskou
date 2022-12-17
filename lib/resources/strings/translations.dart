@@ -163,6 +163,7 @@ class AppTranslations extends Translations {
           'not_found': 'not found',
           'location_background_notification_message':
               'Taskou is listening location in background',
+          'last_updated': 'Last updated:',
         },
       };
 }

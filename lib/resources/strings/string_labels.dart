@@ -127,4 +127,5 @@ class Strings {
   String get stop => 'stop'.tr;
   String get locationBackgroundNotificationMessage => 'location_background_notification_message'.tr;
   String get notFound => 'not_found'.tr;
+  String get lastUpdated => 'last_updated'.tr;
 }

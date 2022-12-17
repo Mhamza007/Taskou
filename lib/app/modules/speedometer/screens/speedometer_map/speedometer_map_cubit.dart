@@ -160,6 +160,17 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
             };
             var locationData = LocationData.fromMap(locationMap);
 
+            var infoTitle = '${state.trackingResponseData?.name}';
+
+            String? infoSnippet;
+            if (locationData.time != null) {
+              var dateTime = DateTime.fromMillisecondsSinceEpoch(
+                locationData.time!.toInt(),
+              );
+              String? lastUpdated = '${dateTime.hour}:${dateTime.minute}';
+              infoSnippet = 'Last updated: $lastUpdated';
+            }
+
             emit(
               state.copyWith(
                 speed: locationData.speed?.toStringAsFixed(2),
@@ -168,7 +179,8 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
                   Marker(
                     markerId: MarkerId('${locationData.time}'),
                     infoWindow: InfoWindow(
-                      title: '${state.trackingResponseData?.name}',
+                      title: infoTitle,
+                      snippet: infoSnippet,
                     ),
                     position: LatLng(
                       locationData.latitude!,
