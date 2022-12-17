@@ -33,7 +33,9 @@ class SpeedometerMapScreen extends StatelessWidget {
                 GoogleMap(
                   initialCameraPosition: state.initialCameraPosition,
                   onMapCreated: cubit.onMapCreated,
-                  myLocationEnabled: true,
+                  myLocationEnabled:
+                      state.trackingMode == TrackingMode.childMode,
+                  markers: state.markers,
                 ),
                 Positioned(
                   right: 8.0,

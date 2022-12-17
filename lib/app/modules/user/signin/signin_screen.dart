@@ -18,6 +18,7 @@ class SignInScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => SignInCubit(context),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: BlocConsumer<SignInCubit, SignInState>(
           listenWhen: (prev, curr) => prev.authStatus != curr.authStatus,
           listener: (context, state) {

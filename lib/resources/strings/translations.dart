@@ -154,11 +154,15 @@ class AppTranslations extends Translations {
           'error_logging_out': 'An error occurred while logging out',
           'submit': 'Submit',
           'enter_code_here': 'Enter your code here',
-          'tracking_question': 'Do you want to track your Location and speed with your relative?',
+          'tracking_question':
+              'Do you want to track your Location and speed with your relative?',
           'yes': 'Yes',
           'no': 'No',
           'of': 'of',
           'stop': 'Stop',
+          'not_found': 'not found',
+          'location_background_notification_message':
+              'Taskou is listening location in background',
         },
       };
 }

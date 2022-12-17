@@ -26,6 +26,7 @@ class OtpScreen extends StatelessWidget {
         data: data,
       ),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: BlocConsumer<OtpCubit, OtpState>(
           listenWhen: (prev, curr) => prev.status != curr.status,
           listener: (context, state) {
@@ -50,6 +51,7 @@ class OtpScreen extends StatelessWidget {
             return AbsorbPointer(
               absorbing: state.status == VerifyStatus.loading,
               child: GestureDetector(
+                onTap: Helpers.unFocus,
                 child: SafeArea(
                   child: Column(
                     children: [

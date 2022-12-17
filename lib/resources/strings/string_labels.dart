@@ -125,4 +125,6 @@ class Strings {
   String get no => 'no'.tr;
   String get of => 'of'.tr;
   String get stop => 'stop'.tr;
+  String get locationBackgroundNotificationMessage => 'location_background_notification_message'.tr;
+  String get notFound => 'not_found'.tr;
 }

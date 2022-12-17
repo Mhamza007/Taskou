@@ -15,6 +15,7 @@ class SpeedometerMapState extends Equatable {
     this.trackingResponseData,
     this.speed,
     this.locationData,
+    this.markers = const {},
   });
 
   final CameraPosition initialCameraPosition;
@@ -25,6 +26,7 @@ class SpeedometerMapState extends Equatable {
   final TrackingResponseData? trackingResponseData;
   final String? speed;
   final LocationData? locationData;
+  final Set<Marker> markers;
 
   @override
   List<Object?> get props => [
@@ -36,6 +38,7 @@ class SpeedometerMapState extends Equatable {
         trackingResponseData,
         speed,
         locationData,
+        markers,
       ];
 
   SpeedometerMapState copyWith({
@@ -47,9 +50,11 @@ class SpeedometerMapState extends Equatable {
     TrackingResponseData? trackingResponseData,
     String? speed,
     LocationData? locationData,
+    Set<Marker>? markers,
   }) {
     return SpeedometerMapState(
-      initialCameraPosition: initialCameraPosition ?? this.initialCameraPosition,
+      initialCameraPosition:
+          initialCameraPosition ?? this.initialCameraPosition,
       googleMapController: googleMapController ?? this.googleMapController,
       zoom: zoom ?? this.zoom,
       trackingMode: trackingMode ?? this.trackingMode,
@@ -57,6 +62,7 @@ class SpeedometerMapState extends Equatable {
       trackingResponseData: trackingResponseData ?? this.trackingResponseData,
       speed: speed ?? this.speed,
       locationData: locationData ?? this.locationData,
+      markers: markers ?? this.markers,
     );
   }
 }

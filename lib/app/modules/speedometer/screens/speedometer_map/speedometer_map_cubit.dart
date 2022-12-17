@@ -9,7 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
+import '../../../../../resources/resources.dart';
 import '../../../../../sdk/sdk.dart';
+import '../../../../app.dart';
 
 part 'speedometer_map_state.dart';
 
@@ -28,6 +30,7 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
   Completer<GoogleMapController> googleMapcompleter = Completer();
   final Location _location = Location();
   StreamSubscription<LocationData>? _locationSubscription;
+  StreamSubscription<DatabaseEvent>? _databaseSubscription;
   TrackingMode? trackingMode;
   late FirebaseDatabase _firebaseDatabase;
   late DatabaseReference _databaseReference;
@@ -72,16 +75,21 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
         googleMapController: controller,
       ),
     );
-    goToCurrentLocation();
+    if (trackingMode == TrackingMode.relativeMode) {
+      _trackChildLocation();
+    } else {
+      goToCurrentLocation();
+    }
   }
 
   Future<void> _startLocationService() async {
     await _location.changeNotificationOptions(
-      title: 'Taskou',
-      subtitle: 'Taskou is listening location in background',
+      title: Res.string.appTitle,
+      subtitle: Res.string.locationBackgroundNotificationMessage,
     );
     await _location.changeSettings(
-      interval: 5000,
+      interval: 5000, // 5 seconds
+      distanceFilter: 5.0, // 5.0 meters
     );
     _locationSubscription = _location.onLocationChanged.listen(
       (LocationData event) {
@@ -111,17 +119,10 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
           'longitude': locationData.longitude,
           'accuracy': locationData.accuracy,
           'altitude': locationData.altitude,
-          'speed': locationData.speed,
-          'speed_accuracy': locationData.speedAccuracy,
-          'heading': locationData.heading,
+          'speed': '${locationData.speed}',
           'time': locationData.time,
           'isMock': locationData.isMock,
           'verticalAccuracy': locationData.verticalAccuracy,
-          'headingAccuracy': locationData.headingAccuracy,
-          'elapsedRealtimeNanos': locationData.elapsedRealtimeNanos,
-          'elapsedRealtimeUncertaintyNanos':
-              locationData.elapsedRealtimeUncertaintyNanos,
-          'satelliteNumber': locationData.satelliteNumber,
           'provider': locationData.provider,
         },
       );
@@ -138,7 +139,77 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
     Navigator.pop(context);
   }
 
-  Future<void> _trackChildLocation() async {}
+  Future<void> _trackChildLocation() async {
+    try {
+      var data = await _databaseReference.get();
+      if (data.exists) {
+        _databaseSubscription = _databaseReference.onValue.listen(
+          (DatabaseEvent event) {
+            var data = event.snapshot.value as Map;
+
+            var locationMap = {
+              'latitude': data['latitude'],
+              'longitude': data['longitude'],
+              'accuracy': data['accuracy'],
+              'altitude': data['altitude'],
+              'speed': double.parse(data['speed']),
+              'time': double.parse(data['time'].toString()),
+              'isMock': data['isMock'],
+              'verticalAccuracy': data['verticalAccuracy'],
+              'provider': data['provider'],
+            };
+            var locationData = LocationData.fromMap(locationMap);
+
+            emit(
+              state.copyWith(
+                speed: locationData.speed?.toStringAsFixed(2),
+                locationData: locationData,
+                markers: {
+                  Marker(
+                    markerId: MarkerId('${locationData.time}'),
+                    infoWindow: InfoWindow(
+                      title: '${state.trackingResponseData?.name}',
+                    ),
+                    position: LatLng(
+                      locationData.latitude!,
+                      locationData.longitude!,
+                    ),
+                  ),
+                },
+              ),
+            );
+
+            if (locationData.latitude != null &&
+                locationData.longitude != null) {
+              state.googleMapController?.animateCamera(
+                CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                    target: LatLng(
+                      locationData.latitude!,
+                      locationData.longitude!,
+                    ),
+                    zoom: state.zoom,
+                  ),
+                ),
+              );
+            }
+          },
+          onError: (e) {
+            debugPrint('_trackChildLocation $e');
+          },
+        );
+      } else {
+        // The code does not exists
+        Helpers.errorSnackBar(
+          context: context,
+          title:
+              '${state.trackingResponseData?.relation} ${state.trackingResponseData?.name} ${Res.string.notFound}',
+        );
+      }
+    } catch (e) {
+      debugPrint('_trackChildLocation $e');
+    }
+  }
 
   Future<void> goToCurrentLocation() async {
     var locationData = await getCurrentLocation();
@@ -162,9 +233,11 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
         );
       } else {
         // Error
+        debugPrint('goToCurrentLocation lat lon null');
       }
     } else {
       // Error
+      debugPrint('goToCurrentLocation locationData null');
     }
   }
 
@@ -197,5 +270,12 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
       locationData = null;
     }
     return locationData;
+  }
+
+  @override
+  Future<void> close() {
+    _databaseSubscription?.cancel();
+
+    return super.close();
   }
 }

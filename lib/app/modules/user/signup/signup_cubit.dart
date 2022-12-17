@@ -28,6 +28,7 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   Future<void> onSignUpPressed() async {
     if (signUpForm.valid) {
+      Helpers.unFocus();
       try {
         emit(
           state.copyWith(

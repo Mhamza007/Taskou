@@ -35,6 +35,7 @@ class ChildModeScreen extends StatelessWidget {
                 Res.string.yes,
               ),
               onPressed: () {
+                Helpers.unFocus();
                 Navigator.pop(context);
                 cubit.submit();
               },

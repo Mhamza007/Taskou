@@ -33,6 +33,7 @@ class SignInCubit extends Cubit<SignInState> {
 
   Future<void> onSignInPressed() async {
     if (signInForm.valid) {
+      Helpers.unFocus();
       try {
         emit(
           state.copyWith(
