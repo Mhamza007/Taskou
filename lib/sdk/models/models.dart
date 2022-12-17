@@ -13,3 +13,4 @@ export 'post_work_response.dart';
 export 'tracking_response.dart';
 export 'add_child_response.dart';
 export 'child_mode_response.dart';
+export 'book_handyman_response.dart';

@@ -22,7 +22,7 @@ class TrackingServiceApi {
   }) async {
     try {
       dioBase?.options.headers.addAll({
-        'user_token': Constants.userToken,
+        'user_token': userToken,
       });
       var response = await dioBase?.get(
         'getChild',
@@ -46,7 +46,7 @@ class TrackingServiceApi {
   }) async {
     try {
       dioBase?.options.headers.addAll({
-        'user_token': Constants.userToken,
+        'user_token': userToken,
       });
       var response = await dioBase?.post(
         'addChild',
@@ -70,7 +70,7 @@ class TrackingServiceApi {
   }) async {
     try {
       dioBase?.options.headers.addAll({
-        'user_token': Constants.userToken,
+        'user_token': userToken,
       });
       var response = await dioBase?.post(
         'deleteChild',

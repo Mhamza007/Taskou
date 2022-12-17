@@ -104,6 +104,20 @@ class RouteGenerator {
         return _PageTransition(
           child: const ChildModeScreen(),
         );
+      case Routes.bookNowLater:
+        args as Map<String, dynamic>;
+        return _PageTransition(
+          child: BookNowLaterScreen(
+            data: args,
+          ),
+        );
+      case Routes.bookServiceman:
+        args as Map<String, dynamic>;
+        return _PageTransition(
+          child: BookServicemanScreen(
+            data: args,
+          ),
+        );
       // case Routes.sync_home:
       //   return _PageTransition(
       //     child: SyncScreen(),

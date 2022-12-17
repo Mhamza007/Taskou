@@ -95,6 +95,8 @@ class SubCategoryCubit extends Cubit<SubCategoryState> {
                   arguments: {
                     'cat_id': '${subCategoriesData.categoryId}',
                     'sub1_id': '${subCategoriesData.subCatId}',
+                    'title':
+                        '${state.title} > ${subCategoriesData.subCategory}',
                   },
                 );
               },
@@ -204,6 +206,8 @@ class SubCategoryCubit extends Cubit<SubCategoryState> {
                     'cat_id': '${sub2CategoriesData.catId}',
                     'sub1_id': '${sub2CategoriesData.subcatId}',
                     'sub2_id': '${sub2CategoriesData.id}',
+                    'title':
+                        '${state.title} > ${sub2CategoriesData.subSubCatName}',
                   },
                 );
               },
@@ -284,6 +288,7 @@ class SubCategoryCubit extends Cubit<SubCategoryState> {
             'sub1_id': '${sub3CategoriesData.subId}',
             'sub2_id': '${sub3CategoriesData.subSubId}',
             'sub3_id': '${sub3CategoriesData.id}',
+            'title': '${state.title} > ${sub3CategoriesData.subSubSubCatName}',
           },
         );
       },

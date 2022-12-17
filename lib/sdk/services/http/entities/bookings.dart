@@ -22,8 +22,7 @@ class BookingsApi {
   }) async {
     try {
       dioBase?.options.headers.addAll({
-        'user_token': Constants.userToken,
-        // 'user_token': userToken,
+        'user_token': userToken,
       });
       var response = await dioBase?.get(
         'get_Bookings',
@@ -46,8 +45,7 @@ class BookingsApi {
   }) async {
     try {
       dioBase?.options.headers.addAll({
-        'user_token': Constants.userToken,
-        // 'user_token': userToken,
+        'user_token': userToken,
       });
       var response = await dioBase?.get(
         'getScheduleBook',
@@ -71,8 +69,7 @@ class BookingsApi {
   }) async {
     try {
       dioBase?.options.headers.addAll({
-        'user_token': Constants.userToken,
-        // 'user_token': userToken,
+        'user_token': userToken,
       });
       var response = await dioBase?.post(
         'getbookingStatus',
@@ -97,8 +94,7 @@ class BookingsApi {
   }) async {
     try {
       dioBase?.options.headers.addAll({
-        'user_token': Constants.userToken,
-        // 'user_token': userToken,
+        'user_token': userToken,
       });
       var response = await dioBase?.post(
         'add_ratings',

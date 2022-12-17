@@ -125,7 +125,14 @@ class Strings {
   String get no => 'no'.tr;
   String get of => 'of'.tr;
   String get stop => 'stop'.tr;
-  String get locationBackgroundNotificationMessage => 'location_background_notification_message'.tr;
+  String get locationBackgroundNotificationMessage =>
+      'location_background_notification_message'.tr;
   String get notFound => 'not_found'.tr;
   String get lastUpdated => 'last_updated'.tr;
+  String get whenYouNeedServiceman => 'when_you_need_serviceman'.tr;
+  String get now => 'now'.tr;
+  String get later => 'later'.tr;
+  String get errorWhileGettingLocation => 'error_while_getting_location'.tr;
+  String get bookHandymanAlertMessage => 'book_handyman_alert_message'.tr;
+  String get enterTime => 'enter_time'.tr;
 }

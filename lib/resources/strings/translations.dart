@@ -164,6 +164,12 @@ class AppTranslations extends Translations {
           'location_background_notification_message':
               'Taskou is listening location in background',
           'last_updated': 'Last updated:',
+          'when_you_need_serviceman': 'When do you need serviceman?',
+          'now': 'Now',
+          'later': 'Later',
+          'error_while_getting_location': 'Error while getting location',
+          'book_handyman_alert_message': 'Are you sure to book this handyman?',
+          'enter_time': 'Enter time',
         },
       };
 }

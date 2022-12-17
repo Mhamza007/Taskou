@@ -114,4 +114,15 @@ class BrowseServiceCubit extends Cubit<BrowseServiceState> {
       );
     }
   }
+
+  void book(BrowseServiceData serviceData) {
+    Navigator.pushNamed(
+      context,
+      Routes.bookNowLater,
+      arguments: {
+        'data': serviceData.toJson(),
+        'title': categoryData['title'],
+      },
+    );
+  }
 }

@@ -45,9 +45,8 @@ class PostWorkCubit extends Cubit<PostWorkState> {
     } else {
       Helpers.errorSnackBar(
         context: context,
-        title: 'Error while getting location',
+        title: Res.string.errorWhileGettingLocation,
       );
-      // Error while getting location
     }
   }
 

@@ -16,4 +16,6 @@ abstract class Routes {
   static const speedometerMap = '/speedometer-map';
   static const addChild = '/add-child';
   static const childMode = '/child-mode';
+  static const bookNowLater = '/book-now-later';
+  static const bookServiceman = '/book-serviceman';
 }
