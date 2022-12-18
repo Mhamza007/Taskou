@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:reactive_forms/reactive_forms.dart' as forms;
 import 'package:table_calendar/table_calendar.dart';
@@ -86,9 +87,16 @@ class BookServicemanScreen extends StatelessWidget {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text(
-                Res.string.bookServiceman,
+              leading: InkWell(
+                onTap: cubit.back,
+                child: SvgPicture.asset(
+                  Res.drawable.back,
+                  width: 24,
+                  height: 24,
+                  fit: BoxFit.scaleDown,
+                ),
               ),
+              title: Text(Res.string.bookServiceman),
             ),
             body: forms.ReactiveForm(
               formGroup: cubit.bookForm,

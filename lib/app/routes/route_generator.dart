@@ -118,6 +118,18 @@ class RouteGenerator {
             data: args,
           ),
         );
+      case Routes.support:
+        return _PageTransition(
+          child: const SupportScreen(),
+        );
+      case Routes.help:
+        return _PageTransition(
+          child: const HelpScreen(),
+        );
+      case Routes.changePassword:
+        return _PageTransition(
+          child: const ChangePasswordScreen(),
+        );
       // case Routes.sync_home:
       //   return _PageTransition(
       //     child: SyncScreen(),

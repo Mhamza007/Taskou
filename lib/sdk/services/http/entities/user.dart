@@ -77,4 +77,28 @@ class UserApi {
       rethrow;
     }
   }
+
+  Future<ChangePasswordResponse> changePassword({
+    required String userToken,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      dioBase?.options.headers.addAll({
+        'user_token': userToken,
+      });
+      var response = await dioBase?.post(
+        'change_password',
+        data: data,
+      );
+      if (response != null) {
+        return ChangePasswordResponse.fromJson(response);
+      } else {
+        throw NetworkException(
+          'No response data from server',
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

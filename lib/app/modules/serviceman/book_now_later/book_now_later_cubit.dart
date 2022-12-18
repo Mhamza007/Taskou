@@ -15,6 +15,8 @@ class BookNowLaterCubit extends Cubit<BookNowLaterState> {
   final BuildContext context;
   final Map<String, dynamic> data;
 
+  void back() => Navigator.pop(context);
+
   void bookNow() {
     Navigator.pushNamed(
       context,

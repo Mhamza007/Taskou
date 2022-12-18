@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../resources/resources.dart';
 import '../../../app.dart';
@@ -30,6 +31,15 @@ class BookNowLaterScreen extends StatelessWidget {
                 ? Res.colors.backgroundColorDark
                 : Res.colors.backgroundColorLight2,
             appBar: AppBar(
+              leading: InkWell(
+                onTap: cubit.back,
+                child: SvgPicture.asset(
+                  Res.drawable.back,
+                  width: 24,
+                  height: 24,
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
               title: Text(Res.string.bookServiceman),
             ),
             body: ListView(

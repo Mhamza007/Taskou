@@ -60,6 +60,8 @@ class BookServicemanCubit extends Cubit<BookServicemanState> {
   late UserStorage _userStorage;
   late BookServicemanApi _bookServicemanApi;
 
+  void back() => Navigator.pop(context);
+
   Future<void> bookHandyman() async {
     showCupertinoDialog(
       context: context,

@@ -152,6 +152,21 @@ class DashboardCubit extends Cubit<DashboardState> {
     );
   }
 
+  void home() {
+    Navigator.pop(context);
+    onItemSelected(0);
+  }
+
+  void support() {
+    Navigator.pop(context);
+    Navigator.pushNamed(context, Routes.support);
+  }
+
+  Future<void> help() async {
+    Navigator.pop(context);
+    Navigator.pushNamed(context, Routes.help);
+  }
+
   Future<void> logout() async {
     try {
       await Future.wait(

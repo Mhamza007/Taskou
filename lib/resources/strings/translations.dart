@@ -170,6 +170,20 @@ class AppTranslations extends Translations {
           'error_while_getting_location': 'Error while getting location',
           'book_handyman_alert_message': 'Are you sure to book this handyman?',
           'enter_time': 'Enter time',
+          'let_us_know_what_you_think': 'Let us know what you think!',
+          'settings': 'Settings',
+          'change_password': 'Change Passsword',
+          'faq': 'FAQ',
+          'old_password': 'Old Password',
+          'enter_old_password': 'Enter old password',
+          'new_password': 'New Password',
+          'enter_new_password': 'Enter new password',
+          'confirm_password': 'Confirm Password',
+          're_enter_password': 'Re-enter password',
+          'new_and_confirm_passwords_not_matched':
+              'New Password and confirm Password did not match',
+          'password_must_be_6_characters':
+              'Password must be at least 6 characters',
         },
       };
 }

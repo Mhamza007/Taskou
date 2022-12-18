@@ -18,4 +18,7 @@ abstract class Routes {
   static const childMode = '/child-mode';
   static const bookNowLater = '/book-now-later';
   static const bookServiceman = '/book-serviceman';
+  static const support = '/support';
+  static const help = '/help';
+  static const changePassword = '/change-password';
 }

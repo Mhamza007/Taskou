@@ -135,4 +135,17 @@ class Strings {
   String get errorWhileGettingLocation => 'error_while_getting_location'.tr;
   String get bookHandymanAlertMessage => 'book_handyman_alert_message'.tr;
   String get enterTime => 'enter_time'.tr;
+  String get letUsKnowWhatYouiThink => 'let_us_know_what_you_think'.tr;
+  String get settings => 'settings'.tr;
+  String get changePassword => 'change_password'.tr;
+  String get faq => 'faq'.tr;
+  String get oldPassword => 'old_password'.tr;
+  String get enterOldPassword => 'enter_old_password'.tr;
+  String get newPassword => 'new_password'.tr;
+  String get enterNewPassword => 'enter_new_password'.tr;
+  String get confirmPassword => 'confirm_password'.tr;
+  String get reEnterPassword => 're_enter_password'.tr;
+  String get newConfirmPasswordNotMatched =>
+      'new_and_confirm_passwords_not_matched'.tr;
+  String get passwordLengthError => 'password_must_be_6_characters'.tr;
 }

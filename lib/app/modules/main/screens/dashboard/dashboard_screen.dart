@@ -129,6 +129,9 @@ class DashboardScreen extends StatelessWidget {
               userName: state.userName,
               phoneNumber: state.phoneNumber,
               imageUrl: state.imageUrl,
+              homeTap: dashboardCubit.home,
+              supportTap: dashboardCubit.support,
+              helpTap: dashboardCubit.help,
               logoutTap: dashboardCubit.logout,
             ),
             bottomNavigationBar: BottomNavigationBar(
