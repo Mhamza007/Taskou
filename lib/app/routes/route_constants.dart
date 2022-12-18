@@ -21,4 +21,5 @@ abstract class Routes {
   static const support = '/support';
   static const help = '/help';
   static const changePassword = '/change-password';
+  static const servicemanProfile = '/serviceman-profile';
 }

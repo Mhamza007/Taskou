@@ -130,6 +130,13 @@ class RouteGenerator {
         return _PageTransition(
           child: const ChangePasswordScreen(),
         );
+      case Routes.servicemanProfile:
+        args as Map<String, dynamic>;
+        return _PageTransition(
+          child: ServicemanProfileScreen(
+            data: args,
+          ),
+        );
       // case Routes.sync_home:
       //   return _PageTransition(
       //     child: SyncScreen(),

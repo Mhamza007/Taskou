@@ -90,7 +90,7 @@ class BrowseServiceScreen extends StatelessWidget {
                                 : 'NA',
                             jobs: '${serviceData.getJobs ?? 0} Jobs',
                             rating: serviceData.ratings,
-                            viewProfile: () {},
+                            viewProfile: () => cubit.viewProfile(serviceData),
                             book: () => cubit.book(serviceData),
                           );
                         },

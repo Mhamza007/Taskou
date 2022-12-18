@@ -148,4 +148,5 @@ class Strings {
   String get newConfirmPasswordNotMatched =>
       'new_and_confirm_passwords_not_matched'.tr;
   String get passwordLengthError => 'password_must_be_6_characters'.tr;
+  String get rate => 'rate'.tr;
 }

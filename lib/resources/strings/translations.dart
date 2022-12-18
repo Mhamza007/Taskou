@@ -184,6 +184,7 @@ class AppTranslations extends Translations {
               'New Password and confirm Password did not match',
           'password_must_be_6_characters':
               'Password must be at least 6 characters',
+          'rate': 'Rate',
         },
       };
 }

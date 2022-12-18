@@ -115,6 +115,17 @@ class BrowseServiceCubit extends Cubit<BrowseServiceState> {
     }
   }
 
+  void viewProfile(BrowseServiceData serviceData) {
+    Navigator.pushNamed(
+      context,
+      Routes.servicemanProfile,
+      arguments: {
+        'data': serviceData.toJson(),
+        'title': categoryData['title'],
+      },
+    );
+  }
+
   void book(BrowseServiceData serviceData) {
     Navigator.pushNamed(
       context,
