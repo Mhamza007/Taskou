@@ -2,6 +2,9 @@ part of 'dashboard_cubit.dart';
 
 class DashboardState extends Equatable {
   const DashboardState({
+    this.loading = false,
+    this.message = '',
+    this.apiResponseStatus,
     this.themeMode,
     this.selectedIndex = 0,
     this.editMode = false,
@@ -11,6 +14,9 @@ class DashboardState extends Equatable {
     this.imageUrl,
   });
 
+  final bool loading;
+  final String message;
+  final ApiResponseStatus? apiResponseStatus;
   final ThemeMode? themeMode;
   final int selectedIndex;
   final bool editMode;
@@ -21,6 +27,9 @@ class DashboardState extends Equatable {
 
   @override
   List<Object?> get props => [
+        loading,
+        message,
+        apiResponseStatus,
         themeMode,
         selectedIndex,
         editMode,
@@ -31,6 +40,9 @@ class DashboardState extends Equatable {
       ];
 
   DashboardState copyWith({
+    bool? loading,
+    String? message,
+    ApiResponseStatus? apiResponseStatus,
     ThemeMode? themeMode,
     int? selectedIndex,
     bool? editMode,
@@ -40,6 +52,9 @@ class DashboardState extends Equatable {
     String? imageUrl,
   }) {
     return DashboardState(
+      loading: loading ?? this.loading,
+      message: message ?? this.message,
+      apiResponseStatus: apiResponseStatus ?? this.apiResponseStatus,
       themeMode: themeMode ?? this.themeMode,
       selectedIndex: selectedIndex ?? this.selectedIndex,
       editMode: editMode ?? this.editMode,

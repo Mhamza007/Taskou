@@ -14,12 +14,14 @@ class ProfileScreen extends StatelessWidget {
     required this.state,
     this.themeMode,
     this.editMode = false,
+    this.saveProfile,
   });
 
   final ProfileCubit cubit;
   final ProfileState state;
   final ThemeMode? themeMode;
   final bool editMode;
+  final Function()? saveProfile;
 
   @override
   Widget build(BuildContext context) {
@@ -217,6 +219,25 @@ class ProfileScreen extends StatelessWidget {
               suffixWidget: const SizedBox.shrink(),
               darkMode: darkMode,
             ).paddingOnly(bottom: 16),
+
+            /// Save Button
+            if (editMode)
+              ElevatedButton(
+                onPressed: saveProfile,
+                child: state.loading
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: Res.colors.whiteColor,
+                        ),
+                      ).marginSymmetric(
+                        vertical: 6.0,
+                      )
+                    : Text(
+                        Res.string.save,
+                      ).marginSymmetric(
+                        vertical: 16.0,
+                      ),
+              ),
           ],
         ),
       ),

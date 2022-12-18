@@ -16,6 +16,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   ) : super(const DashboardState()) {
     scaffoldKey = GlobalKey<ScaffoldState>();
     _userStorage = UserStorage();
+    _userApi = UserApi();
 
     emit(
       state.copyWith(
@@ -33,6 +34,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   ProfileCubit? profileCubit;
   late final GlobalKey<ScaffoldState> scaffoldKey;
   late UserStorage _userStorage;
+  late UserApi _userApi;
 
   void initFindServicemanCubit(FindServicemanCubit findServicemanCubit) {
     this.findServicemanCubit = findServicemanCubit;
@@ -93,12 +95,120 @@ class DashboardCubit extends Cubit<DashboardState> {
     );
   }
 
-  void saveEditing() {
-    emit(
-      state.copyWith(
-        editMode: false,
-      ),
-    );
+  Future<void> saveEditing() async {
+    if (profileCubit != null) {
+      if (profileCubit!.profileForm.valid) {
+        try {
+          profileCubit!.emit(
+            profileCubit!.state.copyWith(
+              loading: true,
+            ),
+          );
+
+          var isConnected = await NetworkService().getConnectivity();
+          if (isConnected) {
+            var userToken = _userStorage.getUserToken();
+            if (userToken != null) {
+              var response = await _userApi.updateProfile(
+                userToken: userToken,
+                data: profileCubit!.profileForm.value,
+              );
+              if (response.statusCode == 200 && response.data != null) {
+                profileCubit!.emit(
+                  profileCubit!.state.copyWith(
+                    apiResponseStatus: ApiResponseStatus.success,
+                    message: response.message ?? Res.string.success,
+                  ),
+                );
+                // Update user data in local db
+                var userDataString = _userStorage.getUserData();
+                if (userDataString != null) {
+                  UserLoginData userLoginData = UserLoginData.fromMap(
+                    jsonDecode(userDataString),
+                  );
+                  userLoginData.userId = response.data!.userId;
+                  userLoginData.firstName = response.data!.firstName;
+                  userLoginData.lastName = response.data!.lastName;
+                  userLoginData.email = response.data!.email;
+                  userLoginData.city = response.data!.city;
+                  userLoginData.province = response.data!.province;
+                  userLoginData.zipCode = response.data!.zipCode;
+                  userLoginData.countryCode = response.data!.countryCode;
+                  userLoginData.userMobile = response.data!.userMobile;
+                  userLoginData.profileImg = response.data!.profileImg;
+                  await Future.wait(
+                    [
+                      _userStorage.setUserMobile(response.data!.userMobile),
+                      _userStorage.setUserFirstName(response.data!.firstName),
+                      _userStorage.setUserLastName(response.data!.lastName),
+                      _userStorage.setUserData(
+                        jsonEncode(userLoginData.toMap()),
+                      ),
+                    ],
+                  );
+                }
+              } else {
+                profileCubit!.emit(
+                  profileCubit!.state.copyWith(
+                    apiResponseStatus: ApiResponseStatus.failure,
+                    message: response.message ?? Res.string.apiErrorMessage,
+                  ),
+                );
+              }
+            } else {
+              profileCubit!.emit(
+                profileCubit!.state.copyWith(
+                  apiResponseStatus: ApiResponseStatus.failure,
+                  message: Res.string.userAuthFailedLoginAgain,
+                ),
+              );
+            }
+          } else {
+            profileCubit!.emit(
+              profileCubit!.state.copyWith(
+                apiResponseStatus: ApiResponseStatus.failure,
+                message: Res.string.youAreInOfflineMode,
+              ),
+            );
+          }
+        } on NetworkException catch (e) {
+          profileCubit!.emit(
+            profileCubit!.state.copyWith(
+              apiResponseStatus: ApiResponseStatus.failure,
+              message: e.toString(),
+            ),
+          );
+        } on ResponseException catch (e) {
+          profileCubit!.emit(
+            profileCubit!.state.copyWith(
+              apiResponseStatus: ApiResponseStatus.failure,
+              message: e.toString(),
+            ),
+          );
+        } catch (e) {
+          profileCubit!.emit(
+            profileCubit!.state.copyWith(
+              apiResponseStatus: ApiResponseStatus.failure,
+              message: Res.string.apiErrorMessage,
+            ),
+          );
+        } finally {
+          profileCubit!.emit(
+            profileCubit!.state.copyWith(
+              loading: false,
+              apiResponseStatus: ApiResponseStatus.none,
+            ),
+          );
+          emit(
+            state.copyWith(
+              editMode: false,
+            ),
+          );
+        }
+      } else {
+        profileCubit!.profileForm.markAllAsTouched();
+      }
+    }
   }
 
   void showBottomSheetPopup({
@@ -178,7 +288,7 @@ class DashboardCubit extends Cubit<DashboardState> {
           _userStorage.setUserFirstName(null),
           _userStorage.setUserLastName(null),
           _userStorage.setUserDeviceToken(null),
-          _userStorage.setUserData(jsonEncode(null)),
+          _userStorage.setUserData(null),
         ],
       );
 

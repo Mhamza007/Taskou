@@ -101,4 +101,28 @@ class UserApi {
       rethrow;
     }
   }
+
+  Future<ProfileUpdateResponse> updateProfile({
+    required String userToken,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      dioBase?.options.headers.addAll({
+        'user_token': userToken,
+      });
+      var response = await dioBase?.post(
+        'user_update',
+        data: data,
+      );
+      if (response != null) {
+        return ProfileUpdateResponse.fromJson(response);
+      } else {
+        throw NetworkException(
+          'No response data from server',
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

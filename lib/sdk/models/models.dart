@@ -15,3 +15,4 @@ export 'add_child_response.dart';
 export 'child_mode_response.dart';
 export 'book_handyman_response.dart';
 export 'change_password_response.dart';
+export 'profile_update_response.dart';

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -73,15 +74,42 @@ class DashboardScreen extends StatelessWidget {
             /// Profile Tab
             BlocConsumer<ProfileCubit, ProfileState>(
               listener: (context, state) {
-                // switch (state.apiResponseStatus) {
-                //   case ApiResponseStatus.failure:
-                //     Helpers.errorSnackBar(
-                //       context: context,
-                //       title: state.message,
-                //     );
-                //     break;
-                //   default:
-                // }
+                switch (state.apiResponseStatus) {
+                  case ApiResponseStatus.success:
+                    showCupertinoDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) {
+                        return CupertinoAlertDialog(
+                          title: Text(
+                            Res.string.appTitle.toUpperCase(),
+                            style: TextStyle(
+                              color: Res.colors.materialColor,
+                            ),
+                          ),
+                          content: Text(state.message),
+                          actions: [
+                            CupertinoDialogAction(
+                              child: Text(
+                                Res.string.ok,
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    break;
+                  case ApiResponseStatus.failure:
+                    Helpers.errorSnackBar(
+                      context: context,
+                      title: state.message,
+                    );
+                    break;
+                  default:
+                }
               },
               builder: (context, profileState) {
                 var cubit = context.read<ProfileCubit>();
@@ -92,6 +120,7 @@ class DashboardScreen extends StatelessWidget {
                   state: profileState,
                   themeMode: state.themeMode,
                   editMode: state.editMode,
+                  saveProfile: dashboardCubit.saveEditing,
                 );
               },
             ),
@@ -207,19 +236,21 @@ class DashboardScreen extends StatelessWidget {
     DashboardCubit dashboardCubit,
     DashboardState dashboardState,
   ) {
-    return GestureDetector(
-      onTap: () {
-        if (dashboardState.editMode) {
-          dashboardCubit.saveEditing();
-        } else {
-          dashboardCubit.enableEditing();
-        }
-      },
-      child: Center(
-        child: Text(
-          dashboardState.editMode ? Res.string.save : Res.string.edit,
-        ).marginOnly(right: 12.0),
-      ),
-    );
+    return !dashboardState.editMode
+        ? GestureDetector(
+            onTap: () {
+              if (dashboardState.editMode) {
+                dashboardCubit.saveEditing();
+              } else {
+                dashboardCubit.enableEditing();
+              }
+            },
+            child: Center(
+              child: Text(
+                dashboardState.editMode ? Res.string.save : Res.string.edit,
+              ).marginOnly(right: 12.0),
+            ),
+          )
+        : const SizedBox.shrink();
   }
 }

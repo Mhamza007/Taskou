@@ -2,6 +2,9 @@ part of 'profile_cubit.dart';
 
 class ProfileState extends Equatable {
   const ProfileState({
+    this.loading = false,
+    this.message = '',
+    this.apiResponseStatus,
     this.profileImage,
     this.countryCode,
     this.flag,
@@ -10,6 +13,9 @@ class ProfileState extends Equatable {
     this.exampleNumber,
   });
 
+  final bool loading;
+  final String message;
+  final ApiResponseStatus? apiResponseStatus;
   final String? profileImage;
   final String? countryCode;
   final String? flag;
@@ -19,6 +25,9 @@ class ProfileState extends Equatable {
 
   @override
   List<Object?> get props => [
+        loading,
+        message,
+        apiResponseStatus,
         profileImage,
         countryCode,
         flag,
@@ -27,6 +36,9 @@ class ProfileState extends Equatable {
       ];
 
   ProfileState copyWith({
+    bool? loading,
+    String? message,
+    ApiResponseStatus? apiResponseStatus,
     String? profileImage,
     String? countryCode,
     String? flag,
@@ -35,6 +47,9 @@ class ProfileState extends Equatable {
     String? exampleNumber,
   }) {
     return ProfileState(
+      loading: loading ?? this.loading,
+      message: message ?? this.message,
+      apiResponseStatus: apiResponseStatus ?? this.apiResponseStatus,
       profileImage: profileImage ?? this.profileImage,
       countryCode: countryCode ?? this.countryCode,
       flag: flag ?? this.flag,
