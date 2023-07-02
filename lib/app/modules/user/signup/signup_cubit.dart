@@ -18,6 +18,7 @@ class SignUpCubit extends Cubit<SignUpState> {
   ) : super(const SignUpState()) {
     signUpForm = AuthForms.signUpForm;
     _userApi = UserApi();
+    _authService = AuthService();
 
     _initialCountry();
   }
@@ -25,6 +26,7 @@ class SignUpCubit extends Cubit<SignUpState> {
   final BuildContext context;
   late final FormGroup signUpForm;
   late final UserApi _userApi;
+  late final AuthService _authService;
 
   Future<void> onSignUpPressed() async {
     if (signUpForm.valid) {
@@ -43,6 +45,101 @@ class SignUpCubit extends Cubit<SignUpState> {
             AuthForms.deviceTokenControl: Constants.testDeviceToken,
           });
           debugPrint('${signUpForm.value}');
+
+          // Firebase Auth
+          var countryCode = signUpForm
+              .control(
+                AuthForms.countryCodeControl,
+              )
+              .value;
+          var contactNumber = signUpForm
+              .control(
+                AuthForms.contactPhoneControl,
+              )
+              .value;
+
+          // await _authService.verifyPhoneNumber(
+          //   phoneNumber: '$countryCode$contactNumber',
+          //   autoSignin: (phoneAuthCredential) async {
+          //     var firebaseAuthResult = {
+          //       'credential': phoneAuthCredential,
+          //       'verificationId': phoneAuthCredential.verificationId,
+          //       'error': null,
+          //     };
+          //     await _continueWithFirebaseResponse(
+          //       firebaseAuthResult,
+          //       '$countryCode $contactNumber',
+          //     );
+          //   },
+          //   onVerificationFailed: (firebaseAuthException) async {
+          //     var responseData = {};
+          //     switch (firebaseAuthException.code) {
+          //       case 'invalid-phone-number':
+          //         // Invalid phone
+          //         responseData = {
+          //           'error': 'Invalid phone number',
+          //         };
+          //         break;
+          //       case 'quota-exceeded':
+          //         // Quota Exceeded
+          //         responseData = {
+          //           'error': 'SMS quota exceeded. Please wait for some time',
+          //         };
+          //         break;
+          //       case 'user-disabled':
+          //         // User disabled
+          //         responseData = {
+          //           'error': 'Unable to perform login with the phone number',
+          //         };
+          //         break;
+          //       case 'captcha-check-failed':
+          //         // Thrown if the reCAPTCHA response token was invalid, expired, or if this method was called from a non-whitelisted domain.
+          //         responseData = {
+          //           'error': 'reCAPTCHA failed. Please try again',
+          //         };
+          //         break;
+          //       case 'missing-phone-number':
+          //         // Thrown if the phone number is missing
+          //         responseData = {
+          //           'error': 'The provided phone number is missing',
+          //         };
+          //         break;
+          //       case 'too-many-requests':
+          //         // Thrown if the phone number is missing
+          //         responseData = {
+          //           'error':
+          //               'We have blocked all requests from this device due to unusual activity. Try again later.',
+          //         };
+          //         break;
+          //       default:
+          //         responseData = {
+          //           'error': firebaseAuthException.message ??
+          //               Res.string.errorSigningUp,
+          //         };
+          //         break;
+          //     }
+          //     emit(
+          //       state.copyWith(
+          //         authStatus: AuthStatus.failed,
+          //         authMessage:
+          //             responseData['error'] ?? Res.string.errorSigningUp,
+          //         status: SignUpStatus.loaded,
+          //       ),
+          //     );
+          //   },
+          //   onCodeSent: (String verificationId, int? resendToken) async {
+          //     var firebaseAuthResult = {
+          //       'verificationId': verificationId,
+          //       'resendToken': resendToken,
+          //       'error': null,
+          //     };
+          //     await _continueWithFirebaseResponse(
+          //       firebaseAuthResult,
+          //       '$countryCode $contactNumber',
+          //     );
+          //   },
+          //   onCodeAutoRetrievalTimeout: (String verificationId) async {},
+          // );
 
           var response = await _userApi.signUpUser(
             userData: signUpForm.value,
@@ -82,6 +179,7 @@ class SignUpCubit extends Cubit<SignUpState> {
               authStatus: AuthStatus.failed,
               obscurePassword: true,
               authMessage: Res.string.youAreInOfflineMode,
+              status: SignUpStatus.loaded,
             ),
           );
         }
@@ -90,6 +188,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.copyWith(
             authStatus: AuthStatus.failed,
             authMessage: e.toString(),
+            status: SignUpStatus.loaded,
           ),
         );
       } on ResponseException catch (e) {
@@ -97,6 +196,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.copyWith(
             authStatus: AuthStatus.failed,
             authMessage: e.toString(),
+            status: SignUpStatus.loaded,
           ),
         );
       } catch (e) {
@@ -104,14 +204,15 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.copyWith(
             authStatus: AuthStatus.failed,
             authMessage: Res.string.errorSigningUp,
-          ),
-        );
-      } finally {
-        emit(
-          state.copyWith(
             status: SignUpStatus.loaded,
           ),
         );
+        // } finally {
+        //   emit(
+        //     state.copyWith(
+        //       status: SignUpStatus.loaded,
+        //     ),
+        //   );
       }
     } else {
       signUpForm.markAllAsTouched();
@@ -215,5 +316,33 @@ class SignUpCubit extends Cubit<SignUpState> {
   void signin() {
     debugPrint('sign in');
     Navigator.pushNamedAndRemoveUntil(context, Routes.signIn, (route) => false);
+  }
+
+  Future<void> _continueWithFirebaseResponse(
+    Map firebaseAuthResult,
+    String mobileNumber,
+  ) async {
+    if (firebaseAuthResult.isNotEmpty && firebaseAuthResult['error'] == null) {
+      // Success
+
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(
+        context,
+        Routes.otp,
+        arguments: {
+          'user_data': signUpForm.value,
+          'verification_id': firebaseAuthResult['verificationId'],
+          'phone_number': mobileNumber,
+        },
+      );
+    } else {
+      emit(
+        state.copyWith(
+          authStatus: AuthStatus.failed,
+          authMessage: firebaseAuthResult['error'],
+          status: SignUpStatus.loaded,
+        ),
+      );
+    }
   }
 }

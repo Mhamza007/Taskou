@@ -234,7 +234,7 @@ class AppTheme {
     } else if (themeMode == _sThemeModeLight) {
       return ThemeMode.light;
     } else {
-      return ThemeMode.system;
+      return ThemeMode.light;
     }
   }
 

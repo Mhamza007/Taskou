@@ -170,6 +170,34 @@ class SignUpScreen extends StatelessWidget {
                               ),
                             ).paddingOnly(bottom: 16),
 
+                            /// Confirm Password field
+                            ReactiveTextField(
+                              formControlName: AuthForms.confirmPasswordControl,
+                              hint: Res.string.enterPassword,
+                              keyboardType: TextInputType.visiblePassword,
+                              inputAction: TextInputAction.next,
+                              validationMessages: {
+                                forms.ValidationMessage.required: (_) =>
+                                    Res.string.thisFieldIsRequired,
+                              },
+                              widgetAboveField: Text(
+                                Res.string.confirmPassword,
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                ),
+                              ).marginOnly(bottom: 8),
+                              obscureText: state.obscurePassword,
+                              suffixWidget: SvgPicture.asset(
+                                Res.drawable.password,
+                                height: 24,
+                                width: 24,
+                                fit: BoxFit.scaleDown,
+                                color: darkMode
+                                    ? Res.colors.textColorDark
+                                    : Res.colors.textColor,
+                              ),
+                            ).paddingOnly(bottom: 16),
+
                             /// Email field
                             ReactiveTextField(
                               formControlName: AuthForms.emailControl,
@@ -278,32 +306,6 @@ class SignUpScreen extends StatelessWidget {
                               ),
                             ).paddingOnly(bottom: 16),
 
-                            /// Price per hour
-                            ReactiveTextField(
-                              formControlName: AuthForms.pricePerHourControl,
-                              hint: Res.string.price,
-                              keyboardType: TextInputType.text,
-                              inputAction: TextInputAction.next,
-                              validationMessages: {
-                                forms.ValidationMessage.required: (_) =>
-                                    Res.string.thisFieldIsRequired,
-                              },
-                              widgetAboveField: Text(
-                                Res.string.pricePerHour,
-                                style: const TextStyle(
-                                  fontSize: 18.0,
-                                ),
-                              ).marginOnly(bottom: 8),
-                              suffixWidget: SvgPicture.asset(
-                                Res.drawable.pricePerHour,
-                                height: 24,
-                                width: 24,
-                                fit: BoxFit.scaleDown,
-                                color: darkMode
-                                    ? Res.colors.textColorDark
-                                    : Res.colors.textColor,
-                              ),
-                            ).paddingOnly(bottom: 16),
                             Center(
                               child: RichText(
                                 textAlign: TextAlign.center,

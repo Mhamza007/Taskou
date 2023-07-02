@@ -1,9 +1,16 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../../resources/resources.dart';
 import '../../../../../../../sdk/sdk.dart';
+import '../../../../../db/db.dart';
 import '../../../../app.dart';
 
 part 'sub_category_state.dart';
@@ -18,6 +25,7 @@ class SubCategoryCubit extends Cubit<SubCategoryState> {
       initialPage: state.page,
     );
     _categoriesApi = CategoriesApi();
+    _userStorage = UserStorage();
 
     getTitle();
     getSubCategoriesList();
@@ -29,6 +37,7 @@ class SubCategoryCubit extends Cubit<SubCategoryState> {
   late SubCategoriesResponse? subCategoriesResponse;
   late PageController pageController;
   late final CategoriesApi _categoriesApi;
+  late UserStorage _userStorage;
 
   getTitle() {
     emit(
@@ -85,31 +94,53 @@ class SubCategoryCubit extends Cubit<SubCategoryState> {
               curve: Curves.ease,
             );
           } else {
-            // ignore: use_build_context_synchronously
+            Map<String, dynamic> categoryData = {
+              'cat_id': '${subCategoriesData.categoryId}',
+              'sub1_id': '${subCategoriesData.subCatId}',
+              'title': '${state.title} > ${subCategoriesData.subCategory}',
+            };
             context.read<DashboardCubit>().showBottomSheetPopup(
               browseService: () {
+                String? userData = _userStorage.getUserData();
+
+                if (userData != null) {
+                  var userMap = jsonDecode(userData);
+                  categoryData.addAll(
+                    {
+                      'city': userMap['city'],
+                      'province': userMap['province'],
+                    },
+                  );
+                }
+
                 Navigator.pop(context);
                 Navigator.pushNamed(
                   context,
                   Routes.browseService,
-                  arguments: {
-                    'cat_id': '${subCategoriesData.categoryId}',
-                    'sub1_id': '${subCategoriesData.subCatId}',
-                    'title':
-                        '${state.title} > ${subCategoriesData.subCategory}',
-                  },
+                  arguments: categoryData,
                 );
               },
-              postWork: () {
+              postWork: () async {
                 Navigator.pop(context);
-                Navigator.pushNamed(
-                  context,
-                  Routes.postWork,
-                  arguments: {
-                    'cat_id': '${subCategoriesData.categoryId}',
-                    'sub1_id': '${subCategoriesData.subCatId}',
-                  },
-                );
+
+                var data = await browseServiceFrom();
+                if (data != null && data is Map<String, dynamic>) {
+                  categoryData.addAll(data);
+
+                  Navigator.pushNamed(
+                    context,
+                    Routes.browseService,
+                    arguments: categoryData,
+                  );
+                }
+                // Navigator.pushNamed(
+                //   context,
+                //   Routes.postWork,
+                //   arguments: {
+                //     'cat_id': '${subCategoriesData.categoryId}',
+                //     'sub1_id': '${subCategoriesData.subCatId}',
+                //   },
+                // );
               },
             );
           }
@@ -195,33 +226,55 @@ class SubCategoryCubit extends Cubit<SubCategoryState> {
               curve: Curves.ease,
             );
           } else {
-            // ignore: use_build_context_synchronously
+            Map<String, dynamic> categoryData = {
+              'cat_id': '${sub2CategoriesData.catId}',
+              'sub1_id': '${sub2CategoriesData.subcatId}',
+              'sub2_id': '${sub2CategoriesData.id}',
+              'title': '${state.title} > ${sub2CategoriesData.subSubCatName}',
+            };
             context.read<DashboardCubit>().showBottomSheetPopup(
               browseService: () {
+                String? userData = _userStorage.getUserData();
+
+                if (userData != null) {
+                  var userMap = jsonDecode(userData);
+                  categoryData.addAll(
+                    {
+                      'city': userMap['city'],
+                      'province': userMap['province'],
+                    },
+                  );
+                }
+
                 Navigator.pop(context);
                 Navigator.pushNamed(
                   context,
                   Routes.browseService,
-                  arguments: {
-                    'cat_id': '${sub2CategoriesData.catId}',
-                    'sub1_id': '${sub2CategoriesData.subcatId}',
-                    'sub2_id': '${sub2CategoriesData.id}',
-                    'title':
-                        '${state.title} > ${sub2CategoriesData.subSubCatName}',
-                  },
+                  arguments: categoryData,
                 );
               },
-              postWork: () {
+              postWork: () async {
                 Navigator.pop(context);
-                Navigator.pushNamed(
-                  context,
-                  Routes.postWork,
-                  arguments: {
-                    'cat_id': '${sub2CategoriesData.catId}',
-                    'sub1_id': '${sub2CategoriesData.subcatId}',
-                    'sub2_id': '${sub2CategoriesData.id}',
-                  },
-                );
+
+                var data = await browseServiceFrom();
+                if (data != null && data is Map<String, dynamic>) {
+                  categoryData.addAll(data);
+
+                  Navigator.pushNamed(
+                    context,
+                    Routes.browseService,
+                    arguments: categoryData,
+                  );
+                }
+                // Navigator.pushNamed(
+                //   context,
+                //   Routes.postWork,
+                //   arguments: {
+                //     'cat_id': '${sub2CategoriesData.catId}',
+                //     'sub1_id': '${sub2CategoriesData.subcatId}',
+                //     'sub2_id': '${sub2CategoriesData.id}',
+                //   },
+                // );
               },
             );
           }
@@ -276,34 +329,57 @@ class SubCategoryCubit extends Cubit<SubCategoryState> {
   ) async {
     debugPrint('${sub3CategoriesData.toJson()}');
 
-    // ignore: use_build_context_synchronously
+    Map<String, dynamic> categoryData = {
+      'cat_id': '${sub3CategoriesData.catId}',
+      'sub1_id': '${sub3CategoriesData.subId}',
+      'sub2_id': '${sub3CategoriesData.subSubId}',
+      'sub3_id': '${sub3CategoriesData.id}',
+      'title': '${state.title} > ${sub3CategoriesData.subSubSubCatName}',
+    };
     context.read<DashboardCubit>().showBottomSheetPopup(
       browseService: () {
+        String? userData = _userStorage.getUserData();
+
+        if (userData != null) {
+          var userMap = jsonDecode(userData);
+          categoryData.addAll(
+            {
+              'city': userMap['city'],
+              'province': userMap['province'],
+            },
+          );
+        }
+
         Navigator.pop(context);
         Navigator.pushNamed(
           context,
           Routes.browseService,
-          arguments: {
-            'cat_id': '${sub3CategoriesData.catId}',
-            'sub1_id': '${sub3CategoriesData.subId}',
-            'sub2_id': '${sub3CategoriesData.subSubId}',
-            'sub3_id': '${sub3CategoriesData.id}',
-            'title': '${state.title} > ${sub3CategoriesData.subSubSubCatName}',
-          },
+          arguments: categoryData,
         );
       },
-      postWork: () {
+      postWork: () async {
         Navigator.pop(context);
-        Navigator.pushNamed(
-          context,
-          Routes.postWork,
-          arguments: {
-            'cat_id': '${sub3CategoriesData.catId}',
-            'sub1_id': '${sub3CategoriesData.subId}',
-            'sub2_id': '${sub3CategoriesData.subSubId}',
-            'sub3_id': '${sub3CategoriesData.id}',
-          },
-        );
+
+        var data = await browseServiceFrom();
+        if (data != null && data is Map<String, dynamic>) {
+          categoryData.addAll(data);
+
+          Navigator.pushNamed(
+            context,
+            Routes.browseService,
+            arguments: categoryData,
+          );
+        }
+        // Navigator.pushNamed(
+        //   context,
+        //   Routes.postWork,
+        //   arguments: {
+        //     'cat_id': '${sub3CategoriesData.catId}',
+        //     'sub1_id': '${sub3CategoriesData.subId}',
+        //     'sub2_id': '${sub3CategoriesData.subSubId}',
+        //     'sub3_id': '${sub3CategoriesData.id}',
+        //   },
+        // );
       },
     );
   }
@@ -367,5 +443,99 @@ class SubCategoryCubit extends Cubit<SubCategoryState> {
     } else {
       Navigator.pop(context);
     }
+  }
+
+  Future<dynamic> browseServiceFrom() async {
+    var cityController = TextEditingController();
+    var provinceController = TextEditingController();
+
+    return await showCupertinoDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text(
+            Res.string.appTitle.toUpperCase(),
+            style: TextStyle(
+              color: Res.colors.materialColor,
+            ),
+          ),
+          content: Column(
+            children: [
+              Text(Res.string.browseService),
+              const SizedBox(height: 8.0),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Material(
+                  child: TextFormField(
+                    controller: cityController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      hintText: Res.string.city,
+                      hintStyle: TextStyle(
+                        color: Res.appTheme.getThemeMode() == ThemeMode.dark
+                            ? Res.colors.darkSearchHintColor
+                            : Res.colors.lightSearchHintColor,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      filled: true,
+                      fillColor: Res.appTheme.getThemeMode() == ThemeMode.dark
+                          ? Res.colors.darkSearchBackgroundColor
+                          : Res.colors.lightSearchBackgroundColor,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Material(
+                  child: TextFormField(
+                    controller: provinceController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      hintText: Res.string.province,
+                      hintStyle: TextStyle(
+                        color: Res.appTheme.getThemeMode() == ThemeMode.dark
+                            ? Res.colors.darkSearchHintColor
+                            : Res.colors.lightSearchHintColor,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      filled: true,
+                      fillColor: Res.appTheme.getThemeMode() == ThemeMode.dark
+                          ? Res.colors.darkSearchBackgroundColor
+                          : Res.colors.lightSearchBackgroundColor,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            CupertinoDialogAction(
+              onPressed: () {
+                Navigator.pop(context, {
+                  'city': cityController.text,
+                  'province': provinceController.text,
+                });
+              },
+              child: Text(
+                Res.string.browseService,
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

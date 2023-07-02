@@ -4,6 +4,7 @@ class AuthForms {
   static String userMobileControl = 'user_mobile';
   static String contactPhoneControl = 'contact_phone';
   static String passwordControl = 'user_password';
+  static String confirmPasswordControl = 'confirm_password';
   static String lastNameControl = 'last_name';
   static String firstNameControl = 'first_name';
   static String emailControl = 'email';
@@ -62,6 +63,11 @@ class AuthForms {
               Validators.required,
             ],
           ),
+          confirmPasswordControl: FormControl<String>(
+            validators: [
+              Validators.required,
+            ],
+          ),
           emailControl: FormControl<String>(
             validators: [
               Validators.email,
@@ -82,28 +88,13 @@ class AuthForms {
               Validators.required,
             ],
           ),
-          pricePerHourControl: FormControl<String>(
-            validators: [
-              Validators.required,
-            ],
-          ),
           deviceTokenControl: FormControl<String>(),
         },
-      );
-
-  static FormGroup get forgotPasswordForm => fb.group(
-        {
-          countryCodeControl: FormControl<String>(
-            validators: [
-              Validators.required,
-            ],
+        [
+          Validators.mustMatch(
+            passwordControl,
+            confirmPasswordControl,
           ),
-          userMobileControl: FormControl<String>(
-            validators: [
-              Validators.required,
-            ],
-          ),
-          deviceTokenControl: FormControl<String>(),
-        },
+        ],
       );
 }

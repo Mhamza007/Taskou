@@ -8,6 +8,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:taskou/db/user/user.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../resources/resources.dart';
 import '../../../../../sdk/sdk.dart';
@@ -21,11 +23,15 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
     required this.data,
   }) : super(const SpeedometerMapState()) {
     _firebaseDatabase = FirebaseDatabase.instance;
+    _userStorage = UserStorage();
+    _bookingsApi = BookingsApi();
 
     _getTrackingMode();
   }
 
   final BuildContext context;
+  late UserStorage _userStorage;
+  late BookingsApi _bookingsApi;
   final Map<String, dynamic> data;
   Completer<GoogleMapController> googleMapcompleter = Completer();
   final Location _location = Location();
@@ -63,6 +69,13 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
       _databaseReference = _firebaseDatabase.ref(
         'tracking/${trackingResponseData.code}',
       );
+    } else if (trackingMode == TrackingMode.trackHandyman) {
+      var handymanId = data['handyman_id'];
+      _databaseReference = _firebaseDatabase.ref(
+        'tracking/$handymanId',
+      );
+
+      getHandymanData(handymanId: handymanId);
     }
   }
 
@@ -75,7 +88,8 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
         googleMapController: controller,
       ),
     );
-    if (trackingMode == TrackingMode.relativeMode) {
+    if (trackingMode == TrackingMode.relativeMode ||
+        trackingMode == TrackingMode.trackHandyman) {
       _trackChildLocation();
     } else {
       goToCurrentLocation();
@@ -87,17 +101,18 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
       title: Res.string.appTitle,
       subtitle: Res.string.locationBackgroundNotificationMessage,
     );
-    await _location.changeSettings(
-      interval: 5000, // 5 seconds
-      distanceFilter: 5.0, // 5.0 meters
-    );
+    // await _location.changeSettings(
+    //   interval: 5000, // 5 seconds
+    //   distanceFilter: 5.0, // 5.0 meters
+    // );
     _locationSubscription = _location.onLocationChanged.listen(
       (LocationData event) {
         emit(
           state.copyWith(
             locationData: event,
-            speed:
-                event.speed != null ? event.speed!.toStringAsFixed(2) : '0.0',
+            speed: event.speed != null
+                ? '${(event.speed! * 3.6).round()} KM'
+                : '0 KM',
           ),
         );
         uploadLocationDateToFirebase(event);
@@ -228,7 +243,8 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
     if (locationData != null) {
       if (trackingMode == TrackingMode.childMode) {
         _startLocationService();
-      } else if (trackingMode == TrackingMode.relativeMode) {
+      } else if (trackingMode == TrackingMode.relativeMode ||
+          trackingMode == TrackingMode.trackHandyman) {
         _trackChildLocation();
       }
       if (locationData.latitude != null && locationData.longitude != null) {
@@ -282,6 +298,127 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
       locationData = null;
     }
     return locationData;
+  }
+
+  Future<void> getHandymanData({
+    required String handymanId,
+  }) async {
+    try {
+      emit(
+        state.copyWith(
+          loading: true,
+        ),
+      );
+
+      var isConnected = await NetworkService().getConnectivity();
+      if (isConnected) {
+        var userToken = _userStorage.getUserToken();
+        if (userToken != null) {
+          var response = await _bookingsApi.getHandymanById(
+            userToken: userToken,
+            handymanId: handymanId,
+          );
+
+          if (response?.statusCode == 200 && response?.data != null) {
+            emit(
+              state.copyWith(
+                handymanDetails: response?.data?.handymanDetails,
+              ),
+            );
+          } else {
+            emit(
+              state.copyWith(
+                apiResponseStatus: ApiResponseStatus.failure,
+                message: response?.message ?? Res.string.apiErrorMessage,
+              ),
+            );
+          }
+        } else {
+          emit(
+            state.copyWith(
+              apiResponseStatus: ApiResponseStatus.failure,
+              message: Res.string.userAuthFailedLoginAgain,
+            ),
+          );
+        }
+      } else {
+        emit(
+          state.copyWith(
+            apiResponseStatus: ApiResponseStatus.failure,
+            message: Res.string.youAreInOfflineMode,
+          ),
+        );
+      }
+    } on NetworkException catch (e) {
+      emit(
+        state.copyWith(
+          apiResponseStatus: ApiResponseStatus.failure,
+          message: e.toString(),
+        ),
+      );
+    } on ResponseException catch (e) {
+      emit(
+        state.copyWith(
+          apiResponseStatus: ApiResponseStatus.failure,
+          message: e.toString(),
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          apiResponseStatus: ApiResponseStatus.failure,
+          message: Res.string.apiErrorMessage,
+        ),
+      );
+    } finally {
+      emit(
+        state.copyWith(
+          loading: false,
+          apiResponseStatus: ApiResponseStatus.none,
+        ),
+      );
+    }
+  }
+
+  Future<void> call() async {
+    if (state.handymanDetails != null &&
+        state.handymanDetails?.countryCode != null &&
+        state.handymanDetails?.userMobile != null) {
+      await launchUrl(
+        Uri.parse(
+          'tel:${state.handymanDetails?.countryCode}${state.handymanDetails?.userMobile}',
+        ),
+      );
+    } else {
+      Helpers.errorSnackBar(
+        context: context,
+        title: 'Can not call',
+      );
+    }
+  }
+
+  Future<void> chat() async {
+    try {
+      var handymanId = data['handyman_id'];
+      if (handymanId != null && handymanId != "") {
+        String receiverId = handymanId;
+
+        Navigator.pushNamed(
+          context,
+          Routes.chat,
+          arguments: {
+            'receiver_id': receiverId,
+            'receiver_name':
+                '${state.handymanDetails?.firstName} ${state.handymanDetails?.lastName}',
+          },
+        );
+      }
+    } catch (e) {
+      Helpers.errorSnackBar(
+        context: context,
+        title: 'Unable to open chat',
+      );
+    }
   }
 
   @override

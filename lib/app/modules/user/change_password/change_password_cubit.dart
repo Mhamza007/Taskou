@@ -14,7 +14,7 @@ class ChangePasswordCubit extends Cubit<ChangePasswordState> {
   ChangePasswordCubit(
     this.context,
   ) : super(const ChangePasswordState()) {
-    forgotPasswordForm = ForgotPasswordForm.forgotPasswordForm;
+    forgotPasswordForm = ChangePasswordForm.changePasswordForm;
     _userApi = UserApi();
     _userStorage = UserStorage();
   }

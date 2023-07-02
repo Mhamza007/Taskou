@@ -166,6 +166,7 @@ class DashboardScreen extends StatelessWidget {
             bottomNavigationBar: BottomNavigationBar(
               onTap: dashboardCubit.onItemSelected,
               currentIndex: state.selectedIndex,
+              selectedItemColor: Res.colors.chestnutRedColor,
               items: [
                 BottomNavigationBarItem(
                   label: Res.string.findServiceman,
@@ -174,6 +175,7 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   activeIcon: SvgPicture.asset(
                     Res.drawable.findServicemanSelected,
+                    color: Res.colors.chestnutRedColor,
                   ),
                   tooltip: Res.string.findServiceman,
                 ),
@@ -184,6 +186,7 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   activeIcon: SvgPicture.asset(
                     Res.drawable.bookingsSelected,
+                    color: Res.colors.chestnutRedColor,
                   ),
                   tooltip: Res.string.bookings,
                 ),
@@ -194,6 +197,7 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   activeIcon: SvgPicture.asset(
                     Res.drawable.profileSelected,
+                    color: Res.colors.chestnutRedColor,
                   ),
                   tooltip: Res.string.profile,
                 ),

@@ -22,4 +22,5 @@ abstract class Routes {
   static const help = '/help';
   static const changePassword = '/change-password';
   static const servicemanProfile = '/serviceman-profile';
+  static const chat = '/chat';
 }

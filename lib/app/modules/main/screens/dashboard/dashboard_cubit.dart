@@ -26,6 +26,9 @@ class DashboardCubit extends Cubit<DashboardState> {
     );
 
     _getUserData();
+    try {
+      initializeFirebaseMessagingService();
+    } catch (_) {}
   }
 
   final BuildContext context;
@@ -75,6 +78,10 @@ class DashboardCubit extends Cubit<DashboardState> {
   }
 
   void onItemSelected(int index) {
+    if (index == 1) {
+      bookingsCubit?.getBookings();
+      bookingsCubit?.getScheduleBookings();
+    }
     emit(
       state.copyWith(
         selectedIndex: index,
@@ -220,19 +227,22 @@ class DashboardCubit extends Cubit<DashboardState> {
       builder: (context) {
         return ListView(
           shrinkWrap: true,
-          padding: const EdgeInsets.all(48),
+          padding: const EdgeInsets.symmetric(
+            vertical: 48.0,
+            horizontal: 16.0,
+          ),
           physics: const NeverScrollableScrollPhysics(),
           children: [
             ElevatedButton(
               onPressed: browseService,
-              style: ButtonStyle(
-                textStyle: MaterialStateProperty.all(
-                  const TextStyle(
-                    fontSize: 16,
-                  ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Res.colors.tabIndicatorColor,
+                textStyle: const TextStyle(
+                  fontSize: 16,
                 ),
-                padding: MaterialStateProperty.all(
-                  const EdgeInsets.symmetric(vertical: 12.0),
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
                 ),
               ),
               child: Text(
@@ -242,18 +252,18 @@ class DashboardCubit extends Cubit<DashboardState> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: postWork,
-              style: ButtonStyle(
-                textStyle: MaterialStateProperty.all(
-                  const TextStyle(
-                    fontSize: 16,
-                  ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Res.colors.tabIndicatorColor,
+                textStyle: const TextStyle(
+                  fontSize: 16,
                 ),
-                padding: MaterialStateProperty.all(
-                  const EdgeInsets.symmetric(vertical: 12.0),
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
                 ),
               ),
               child: Text(
-                Res.string.postWork,
+                Res.string.browseServiceFrom,
               ),
             ),
           ],

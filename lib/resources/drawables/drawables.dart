@@ -24,6 +24,8 @@ class Drawables {
   String otp = 'otp'.svg;
   String userAvatar = 'user_avatar'.svg;
   String back = 'back'.svg;
+  String message = 'message'.svg;
+  String send = 'send'.svg;
 }
 
 extension PngImage on String {

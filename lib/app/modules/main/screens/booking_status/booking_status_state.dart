@@ -8,6 +8,8 @@ class BookingStatusState extends Equatable {
     this.bookingType,
     this.bookingStatusData,
     this.titlesList = const [],
+    this.phone,
+    this.canTrack = false,
   });
 
   final bool loading;
@@ -16,6 +18,8 @@ class BookingStatusState extends Equatable {
   final BookingType? bookingType;
   final BookingStatusData? bookingStatusData;
   final List<Map<String, bool>> titlesList;
+  final String? phone;
+  final bool canTrack;
 
   @override
   List<Object?> get props => [
@@ -25,6 +29,8 @@ class BookingStatusState extends Equatable {
         bookingType,
         bookingStatusData,
         titlesList,
+        phone,
+        canTrack,
       ];
 
   BookingStatusState copyWith({
@@ -34,6 +40,8 @@ class BookingStatusState extends Equatable {
     BookingType? bookingType,
     BookingStatusData? bookingStatusData,
     List<Map<String, bool>>? titlesList,
+    String? phone,
+    bool? canTrack,
   }) {
     return BookingStatusState(
       loading: loading ?? this.loading,
@@ -42,6 +50,8 @@ class BookingStatusState extends Equatable {
       bookingType: bookingType ?? this.bookingType,
       bookingStatusData: bookingStatusData ?? this.bookingStatusData,
       titlesList: titlesList ?? this.titlesList,
+      phone: phone ?? this.phone,
+      canTrack: canTrack ?? this.canTrack,
     );
   }
 }

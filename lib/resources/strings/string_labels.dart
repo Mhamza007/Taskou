@@ -57,6 +57,7 @@ class Strings {
   String get whatDoYouNeed => 'what_do_you_need'.tr;
   String get apiErrorMessage => 'unknown_error_occurred'.tr;
   String get browseService => 'browse_service'.tr;
+  String get browseServiceFrom => 'browse_service_from'.tr;
   String get postWork => 'post_work'.tr;
   String get light => 'light'.tr;
   String get dark => 'dark'.tr;
@@ -149,4 +150,9 @@ class Strings {
       'new_and_confirm_passwords_not_matched'.tr;
   String get passwordLengthError => 'password_must_be_6_characters'.tr;
   String get rate => 'rate'.tr;
+  String get trackHandyman => 'track_handyman'.tr;
+  String get errorSendingMessage => 'error_sending_message'.tr;
+  String get pleaseUpdateAppToLatestVersion =>
+      'please_update_app_to_latest_version'.tr;
+  String get update => 'update'.tr;
 }

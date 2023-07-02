@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../../../resources/resources.dart';
@@ -37,31 +38,36 @@ class SpeedometerMapScreen extends StatelessWidget {
                       state.trackingMode == TrackingMode.childMode,
                   markers: state.markers,
                 ),
-                Positioned(
-                  right: 8.0,
-                  top: 8.0,
-                  child: SafeArea(
-                    child: CircleAvatar(
-                      radius: radius + 2,
-                      backgroundColor: Res.colors.materialColor,
-                      child: CircleAvatar(
-                        radius: radius,
-                        backgroundColor: darkMode
-                            ? Res.colors.darkBottomNavBarColor
-                            : Res.colors.whiteColor,
-                        child: Text(
-                          state.speed ?? '0.0',
-                          style: TextStyle(
-                            fontSize: 28.0,
-                            color: darkMode
-                                ? Res.colors.textColorDark
-                                : Res.colors.textColor,
+                if (state.trackingMode == TrackingMode.childMode)
+                  Positioned(
+                    right: 8.0,
+                    top: 8.0,
+                    child: SafeArea(
+                      child: Container(
+                        padding: const EdgeInsets.all(2.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: Res.colors.materialColor,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(12.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            color: Res.colors.whiteColor,
+                          ),
+                          child: Text(
+                            state.speed ?? '0.0',
+                            style: TextStyle(
+                              fontSize: 28.0,
+                              color: darkMode
+                                  ? Res.colors.chestnutRedColor
+                                  : Res.colors.chestnutRedColor,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
               ],
             ),
             bottomNavigationBar: state.trackingMode == TrackingMode.childMode
@@ -146,7 +152,56 @@ class SpeedometerMapScreen extends StatelessWidget {
                       ],
                     ),
                   )
-                : null,
+                : state.trackingMode == TrackingMode.trackHandyman
+                    ? Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                        ),
+                        child: ListTile(
+                          leading: SvgPicture.asset(
+                            Res.drawable.userAvatar,
+                          ),
+                          title: state.handymanDetails?.firstName != null
+                              ? Text(
+                                  '${state.handymanDetails!.firstName!} ${state.handymanDetails?.lastName ?? ''} ',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18.0,
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                          subtitle: state.handymanDetails?.city != null ||
+                                  state.handymanDetails?.province != null
+                              ? Text(
+                                  '${state.handymanDetails?.city ?? ''} ${state.handymanDetails?.province ?? ''}',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              : const SizedBox.shrink(),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: cubit.call,
+                                icon: SvgPicture.asset(
+                                  Res.drawable.phone,
+                                  width: 20.0,
+                                  height: 20.0,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: cubit.chat,
+                                icon: SvgPicture.asset(
+                                  Res.drawable.message,
+                                  width: 20.0,
+                                  height: 20.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : null,
           );
         },
       ),

@@ -125,4 +125,67 @@ class UserApi {
       rethrow;
     }
   }
+
+  Future<ForgotPasswordResponse?> forgotPassword({
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      var response = await dioBase?.post(
+        'forget_pass',
+        data: data,
+      );
+
+      if (response != null) {
+        return ForgotPasswordResponse.fromJson(response);
+      } else {
+        throw NetworkException(
+          'No response data from server',
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<VerifyForgotPasswordOTPResponse?> verifyForgotPasswordOTPResponse({
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      var response = await dioBase?.post(
+        'verify_forget_pass_otp',
+        data: data,
+      );
+
+      if (response != null) {
+        return VerifyForgotPasswordOTPResponse.fromJson(response);
+      } else {
+        throw NetworkException(
+          'No response data from server',
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<StatusMessageResponse?> updatePassword({
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      var response = await dioBase?.post(
+        'update_password',
+        data: data,
+      );
+
+      if (response != null) {
+        return StatusMessageResponse.fromJson(response);
+      } else {
+        throw NetworkException(
+          'No response data from server',
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

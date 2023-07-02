@@ -1,6 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../../../../../db/db.dart';
 import '../../../../../../../resources/resources.dart';
@@ -14,6 +20,7 @@ class FindServicemanCubit extends Cubit<FindServicemanState> {
     this.context,
   ) : super(const FindServicemanState()) {
     _categoriesApi = CategoriesApi();
+    _userStorage = UserStorage();
 
     searchController = TextEditingController();
 
@@ -33,6 +40,7 @@ class FindServicemanCubit extends Cubit<FindServicemanState> {
   final BuildContext context;
   late final CategoriesApi _categoriesApi;
   late final TextEditingController searchController;
+  late UserStorage _userStorage;
 
   Future<void> getCategories() async {
     try {
@@ -176,6 +184,18 @@ class FindServicemanCubit extends Cubit<FindServicemanState> {
             // ignore: use_build_context_synchronously
             context.read<DashboardCubit>().showBottomSheetPopup(
               browseService: () {
+                String? userData = _userStorage.getUserData();
+                if (userData != null) {
+                  var userMap = jsonDecode(userData);
+
+                  categoryData.addAll(
+                    {
+                      'city': userMap['city'],
+                      'province': userMap['province'],
+                    },
+                  );
+                }
+
                 Navigator.pop(context);
                 Navigator.pushNamed(
                   context,
@@ -183,13 +203,112 @@ class FindServicemanCubit extends Cubit<FindServicemanState> {
                   arguments: categoryData,
                 );
               },
-              postWork: () {
+              postWork: () async {
                 Navigator.pop(context);
-                Navigator.pushNamed(
-                  context,
-                  Routes.postWork,
-                  arguments: categoryData,
+
+                var cityController = TextEditingController();
+                var provinceController = TextEditingController();
+
+                var data = await showCupertinoDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (context) {
+                    return CupertinoAlertDialog(
+                      title: Text(
+                        Res.string.appTitle.toUpperCase(),
+                        style: TextStyle(
+                          color: Res.colors.materialColor,
+                        ),
+                      ),
+                      content: Column(
+                        children: [
+                          Text(Res.string.browseService),
+                          const SizedBox(height: 8.0),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Material(
+                              child: TextFormField(
+                                controller: cityController,
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  hintText: Res.string.city,
+                                  hintStyle: TextStyle(
+                                    color: Res.appTheme.getThemeMode() ==
+                                            ThemeMode.dark
+                                        ? Res.colors.darkSearchHintColor
+                                        : Res.colors.lightSearchHintColor,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  filled: true,
+                                  fillColor: Res.appTheme.getThemeMode() ==
+                                          ThemeMode.dark
+                                      ? Res.colors.darkSearchBackgroundColor
+                                      : Res.colors.lightSearchBackgroundColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8.0),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Material(
+                              child: TextFormField(
+                                controller: provinceController,
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  hintText: Res.string.province,
+                                  hintStyle: TextStyle(
+                                    color: Res.appTheme.getThemeMode() ==
+                                            ThemeMode.dark
+                                        ? Res.colors.darkSearchHintColor
+                                        : Res.colors.lightSearchHintColor,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  filled: true,
+                                  fillColor: Res.appTheme.getThemeMode() ==
+                                          ThemeMode.dark
+                                      ? Res.colors.darkSearchBackgroundColor
+                                      : Res.colors.lightSearchBackgroundColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        CupertinoDialogAction(
+                          onPressed: () {
+                            Navigator.pop(context, {
+                              'city': cityController.text,
+                              'province': provinceController.text,
+                            });
+                          },
+                          child: Text(
+                            Res.string.browseService,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 );
+                if (data != null && data is Map<String, dynamic>) {
+                  categoryData.addAll(data);
+                  Navigator.pushNamed(
+                    context,
+                    Routes.browseService,
+                    arguments: categoryData,
+                  );
+                }
               },
             );
           }

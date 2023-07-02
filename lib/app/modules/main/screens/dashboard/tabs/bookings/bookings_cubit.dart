@@ -29,6 +29,7 @@ class BookingsCubit extends Cubit<BookingsState> {
       emit(
         state.copyWith(
           currentLoading: true,
+          pastLoading: true,
         ),
       );
 
@@ -65,6 +66,7 @@ class BookingsCubit extends Cubit<BookingsState> {
                 apiResponseStatus: ApiResponseStatus.failure,
                 message: response?.message ?? Res.string.apiErrorMessage,
                 currentBookingsResponseList: [],
+                pastBookingsResponseList: [],
               ),
             );
           }
@@ -74,6 +76,7 @@ class BookingsCubit extends Cubit<BookingsState> {
               apiResponseStatus: ApiResponseStatus.failure,
               message: Res.string.userAuthFailedLoginAgain,
               currentBookingsResponseList: [],
+              pastBookingsResponseList: [],
             ),
           );
         }
@@ -83,6 +86,7 @@ class BookingsCubit extends Cubit<BookingsState> {
             apiResponseStatus: ApiResponseStatus.failure,
             message: Res.string.youAreInOfflineMode,
             currentBookingsResponseList: [],
+            pastBookingsResponseList: [],
           ),
         );
       }
@@ -92,6 +96,7 @@ class BookingsCubit extends Cubit<BookingsState> {
           apiResponseStatus: ApiResponseStatus.failure,
           message: e.toString(),
           currentBookingsResponseList: [],
+          pastBookingsResponseList: [],
         ),
       );
     } on ResponseException catch (e) {
@@ -100,6 +105,7 @@ class BookingsCubit extends Cubit<BookingsState> {
           apiResponseStatus: ApiResponseStatus.failure,
           message: e.toString(),
           currentBookingsResponseList: [],
+          pastBookingsResponseList: [],
         ),
       );
     } catch (e) {
@@ -108,12 +114,14 @@ class BookingsCubit extends Cubit<BookingsState> {
           apiResponseStatus: ApiResponseStatus.failure,
           message: Res.string.apiErrorMessage,
           currentBookingsResponseList: [],
+          pastBookingsResponseList: [],
         ),
       );
     } finally {
       emit(
         state.copyWith(
           currentLoading: false,
+          pastLoading: false,
           apiResponseStatus: ApiResponseStatus.none,
         ),
       );

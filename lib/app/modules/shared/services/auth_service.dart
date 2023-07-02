@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 
 // import '../../../../db/db.dart';
@@ -16,6 +17,8 @@ class AuthService {
 
   static AuthService get to => _authService;
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   bool _isLoggedIn = false;
   // UserTable? _user;
 
@@ -27,36 +30,66 @@ class AuthService {
   //   _user = user;
   // }
 
-  void logout() {
-    _isLoggedIn = false;
-    // _user = null;
+  /// Verify Phone Number
+  Future<void> verifyPhoneNumber({
+    required String phoneNumber,
+    Duration duration = const Duration(seconds: 90),
+    required Function(PhoneAuthCredential phoneAuthCredential) autoSignin,
+    required Function(FirebaseAuthException authException) onVerificationFailed,
+    required Function(String verificationId, int? resendToken) onCodeSent,
+    required Function(String verificationId) onCodeAutoRetrievalTimeout,
+  }) async {
+    await _auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      timeout: duration,
+      verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
+        await autoSignin(phoneAuthCredential);
+      },
+      verificationFailed: (FirebaseAuthException firebaseAuthException) async {
+        await onVerificationFailed(firebaseAuthException);
+      },
+      codeSent: (String verificationId, int? resendToken) async {
+        await onCodeSent(verificationId, resendToken);
+      },
+      codeAutoRetrievalTimeout: (String verificationId) async {
+        await onCodeAutoRetrievalTimeout(verificationId);
+      },
+    );
   }
 
-  // Future<UserTable?> checkExistingUser() async {
-  //   try {
-  //     var user = await UserDao.get().getLoggedUser();
-  //     if (user != null) {
-  //       login(user);
-  //     }
-  //     return user;
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+  Future<UserCredential> verifyCodeSignin({
+    required String verificationId,
+    required String code,
+  }) async {
+    AuthCredential authCredential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: code,
+    );
 
-  // Future<void> logoutUser(BuildContext context) async {
-  //   try {
-  //     int deleteUser = await UserDao.get().deleteTable();
-  //     if (deleteUser > 0) {
-  //       logout();
-  //       Navigator.pushNamedAndRemoveUntil(
-  //         context,
-  //         Routes.signIn,
-  //         (route) => false,
-  //       );
-  //     }
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+    try {
+      UserCredential userCredential = await _auth.signInWithCredential(
+        authCredential,
+      );
+      return userCredential;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<UserCredential> signinWithCredentials({
+    required PhoneAuthCredential phoneAuthCredential,
+  }) async {
+    UserCredential userCredential = await _auth.signInWithCredential(
+      phoneAuthCredential,
+    );
+    return userCredential;
+  }
+
+  Future<void> logout() async {
+    try {
+      await _auth.signOut();
+    } finally {
+      _isLoggedIn = false;
+    }
+  }
 }

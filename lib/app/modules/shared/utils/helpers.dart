@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../resources/resources.dart';
 
@@ -93,7 +94,7 @@ class Helpers {
     );
   }
 
-  static String bookingsDateTime(String? dateTime) {
+  static String? bookingsDateTime(String? dateTime) {
     try {
       if (dateTime != null && dateTime.isNotEmpty) {
         var dT = DateTime.fromMillisecondsSinceEpoch(int.parse(dateTime));
@@ -105,11 +106,38 @@ class Helpers {
         var ampm = dT.hour > 12 ? Res.string.pm : Res.string.am;
         return '$month ${dT.day}, $hour:$minute $ampm';
       } else {
-        return bookingsDateTime('114523652');
+        return null;
       }
     } catch (e) {
-      return '';
+      return null;
     }
+  }
+
+  static String? getScheduleDateTime({
+    String? scheduleDate,
+    String? scheduleTime,
+  }) {
+    String? scheduleDateTime;
+    try {
+      if (scheduleDate != null && scheduleDate.isNotEmpty) {
+        var sD = DateFormat('MMM dd').format(
+          DateFormat('yyyy-MM-dd').parse(scheduleDate),
+        );
+        scheduleDateTime = sD;
+        if (scheduleTime != null && scheduleTime.isNotEmpty) {
+          var sT = DateFormat('hh:mm a').format(
+            DateFormat('hh:mm:ss').parse(scheduleTime),
+          );
+
+          scheduleDateTime = '$scheduleDateTime $sT';
+        }
+      } else {
+        return null;
+      }
+    } catch (_) {
+      return null;
+    }
+    return scheduleDateTime;
   }
 
   static String monthNameFromNumber(int month) {

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../db/db.dart';
 import '../../../../../resources/resources.dart';
@@ -18,6 +19,7 @@ class BookingStatusCubit extends Cubit<BookingStatusState> {
     _userStorage = UserStorage();
 
     getBookingType();
+    getPhoneNumber();
     getBookingStatus();
   }
 
@@ -27,7 +29,15 @@ class BookingStatusCubit extends Cubit<BookingStatusState> {
   late UserStorage _userStorage;
 
   void back() {
-    Navigator.pop(context);
+    if (bookingData['book_handyman'] == true) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Routes.dashboard,
+        (route) => false,
+      );
+    } else {
+      Navigator.pop(context);
+    }
   }
 
   getBookingType() {
@@ -35,6 +45,15 @@ class BookingStatusCubit extends Cubit<BookingStatusState> {
     emit(
       state.copyWith(
         bookingType: bookingType,
+      ),
+    );
+  }
+
+  getPhoneNumber() {
+    String? phoneNumber = bookingData['contact'];
+    emit(
+      state.copyWith(
+        phone: phoneNumber,
       ),
     );
   }
@@ -64,6 +83,7 @@ class BookingStatusCubit extends Cubit<BookingStatusState> {
               state.copyWith(
                 apiResponseStatus: ApiResponseStatus.success,
                 bookingStatusData: response?.data,
+                canTrack: status == '2',
                 titlesList: [
                   {
                     Res.string.taskAccepted: status == '2' ||
@@ -149,5 +169,38 @@ class BookingStatusCubit extends Cubit<BookingStatusState> {
         'last_name': state.bookingStatusData?.lastName,
       },
     );
+  }
+
+  // Future<void> openChat() async {
+  //   try {
+  //     String? phoneNumber = bookingData['contact'];
+  //     var url = 'whatsapp://send?phone=$phoneNumber';
+  //     launchUrl(Uri.parse(url));
+  //   } catch (e) {
+  //     Helpers.errorSnackBar(
+  //       context: context,
+  //       title: 'Unable to open chat',
+  //     );
+  //   }
+  // }
+
+  void trackHandyman({
+    String? handymanId,
+  }) {
+    if (handymanId != null) {
+      Navigator.pushNamed(
+        context,
+        Routes.speedometerMap,
+        arguments: <String, dynamic>{
+          'mode': TrackingMode.trackHandyman,
+          'handyman_id': handymanId,
+        },
+      );
+    } else {
+      Helpers.errorSnackBar(
+        context: context,
+        title: Res.string.apiErrorMessage,
+      );
+    }
   }
 }

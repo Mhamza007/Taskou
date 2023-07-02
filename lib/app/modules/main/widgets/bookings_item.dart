@@ -12,7 +12,7 @@ class BookingsItem extends StatelessWidget {
     super.key,
     required this.profileImage,
     required this.title,
-    required this.dateTime,
+    this.dateTime,
     required this.location,
     required this.ratePerHour,
     required this.status,
@@ -22,7 +22,7 @@ class BookingsItem extends StatelessWidget {
 
   final String profileImage;
   final String title;
-  final String dateTime;
+  final String? dateTime;
   final String location;
   final String ratePerHour;
   final String status;
@@ -78,13 +78,14 @@ class BookingsItem extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4.0),
-                    Text(
-                      dateTime,
-                      style: const TextStyle(
-                        fontSize: 12.0,
+                    if (dateTime != null)
+                      Text(
+                        dateTime!,
+                        style: const TextStyle(
+                          fontSize: 12.0,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 2.0),
+                    if (dateTime != null) const SizedBox(height: 2.0),
                     Text(
                       location,
                       maxLines: 2,
@@ -108,7 +109,7 @@ class BookingsItem extends StatelessWidget {
               Text(
                 status,
                 style: TextStyle(
-                  color: Res.colors.bookingsStatusColor,
+                  color: Res.colors.chestnutRedColor,
                 ),
               ),
             ],

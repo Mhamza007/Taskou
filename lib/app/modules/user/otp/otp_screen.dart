@@ -136,9 +136,10 @@ class OtpScreen extends StatelessWidget {
                             SizedBox(
                               width: double.maxFinite,
                               child: ElevatedButton(
-                                onPressed: state.buttonEnabled
-                                    ? otpCubit.verifyOtp
-                                    : null,
+                                // onPressed: state.buttonEnabled
+                                //     ? otpCubit.verifyOtp
+                                //     : null,
+                                onPressed: otpCubit.verifyOtp,
                                 style: ButtonStyle(
                                   elevation: MaterialStateProperty.all(0.0),
                                   shape: MaterialStateProperty.all(

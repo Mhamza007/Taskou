@@ -85,7 +85,7 @@ class ChangePasswordScreen extends StatelessWidget {
                     children: [
                       /// Old Password field
                       ReactiveTextField(
-                        formControlName: ForgotPasswordForm.oldPasswordControl,
+                        formControlName: ChangePasswordForm.oldPasswordControl,
                         hint: Res.string.enterOldPassword,
                         keyboardType: TextInputType.visiblePassword,
                         inputAction: TextInputAction.next,
@@ -115,7 +115,7 @@ class ChangePasswordScreen extends StatelessWidget {
 
                       /// New Password field
                       ReactiveTextField(
-                        formControlName: ForgotPasswordForm.newPasswordControl,
+                        formControlName: ChangePasswordForm.newPasswordControl,
                         hint: Res.string.enterNewPassword,
                         keyboardType: TextInputType.visiblePassword,
                         inputAction: TextInputAction.next,
@@ -148,7 +148,7 @@ class ChangePasswordScreen extends StatelessWidget {
                       /// Confirm Password field
                       ReactiveTextField(
                         formControlName:
-                            ForgotPasswordForm.confirmPasswordControl,
+                            ChangePasswordForm.confirmPasswordControl,
                         hint: Res.string.reEnterPassword,
                         keyboardType: TextInputType.visiblePassword,
                         inputAction: TextInputAction.go,

@@ -124,6 +124,21 @@ class BookServicemanCubit extends Cubit<BookServicemanState> {
             );
 
             if (response.statusCode == 200 && response.data != null) {
+              // Send Notification to Handyman
+              try {
+                sendPushNotification(
+                  id: '${response.data?.bookingId ?? DateTime.now().millisecondsSinceEpoch}',
+                  title: 'Booking',
+                  body: response.data?.notificationMessage ?? 'Booking created',
+                  token: '',
+                  // 'cFyDNkxfRoqfn5hYBKIkjD:APA91bGMHVISy45NBPuZO4f2m9UmNiAWLd0qmeLa1wdpNGfG7gzxshA1uSvmeozsxB3jhY6EgApf8BtgwMCEBRsq3jcMiJyRhXMNHE1Q7NO3o12z78_ra03gsDDal68Z-2HuIMtooAzf',
+                );
+                // var receiver = response.data?.notificationTo;
+                // if (receiver != null && receiver.isNotEmpty) {}
+              } catch (e) {
+                debugPrint('Unable to send notification to handyman $e');
+              }
+
               emit(
                 state.copyWith(
                   apiResponseStatus: ApiResponseStatus.success,

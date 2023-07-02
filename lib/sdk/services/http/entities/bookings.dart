@@ -112,4 +112,31 @@ class BookingsApi {
       rethrow;
     }
   }
+
+  Future<GetHandymanByIdResponse?> getHandymanById({
+    required String userToken,
+    required String handymanId,
+  }) async {
+    try {
+      dioBase?.options.headers.addAll({
+        'user_token': userToken,
+      });
+      var response = await dioBase?.post(
+        'get_handymanByid',
+        data: {
+          "handyman_id": handymanId,
+        },
+      );
+
+      if (response != null) {
+        return GetHandymanByIdResponse.fromJson(response);
+      } else {
+        throw NetworkException(
+          'No response data from server',
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

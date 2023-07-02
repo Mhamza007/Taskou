@@ -137,6 +137,13 @@ class RouteGenerator {
             data: args,
           ),
         );
+      case Routes.chat:
+        args as Map;
+        return _PageTransition(
+          child: ChatScreen(
+            data: args,
+          ),
+        );
       // case Routes.sync_home:
       //   return _PageTransition(
       //     child: SyncScreen(),

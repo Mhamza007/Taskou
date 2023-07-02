@@ -43,10 +43,13 @@ dependencies:
   country_picker: ^2.0.16
   dio: ^4.0.6
   equatable: ^2.0.5
+  firebase_auth: ^4.4.2
   firebase_core: ^2.4.0
   firebase_database: ^10.0.7
+  firebase_messaging: ^14.6.1
   flutter_bloc: ^8.1.1
   flutter_google_places: ^0.3.0
+  flutter_local_notifications: ^14.1.0
   flutter_rating_bar: ^4.0.1
   flutter_svg: ^1.1.6
   geolocator: ^9.0.2
@@ -55,10 +58,14 @@ dependencies:
   google_maps_flutter: ^2.2.1
   location: ^4.4.0
   mapbox_search: ^3.0.1+2
-  pinput: ^2.2.16
+  pinput: ^2.2.31
   reactive_forms: ^14.1.0
   share_plus: ^6.3.0
   table_calendar: ^3.0.8
+  url_launcher: 6.1.0
+  cloud_firestore: ^4.7.1
+  package_info_plus: ^3.1.2
+  in_app_update: ^4.0.1
 
 dev_dependencies:
   flutter_test:

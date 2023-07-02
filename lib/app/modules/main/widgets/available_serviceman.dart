@@ -94,13 +94,13 @@ class AvailableServicemanItem extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    certified ? Res.string.certified : '',
-                    style: TextStyle(
-                      color: Res.colors.redColor,
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
+                  // Text(
+                  //   certified ? Res.string.certified : '',
+                  //   style: TextStyle(
+                  //     color: Res.colors.redColor,
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 8.0),
                   Text(
                     ratePerHour,
                     style: const TextStyle(

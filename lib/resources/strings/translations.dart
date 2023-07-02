@@ -90,6 +90,7 @@ class AppTranslations extends Translations {
           'what_do_you_need': 'What do you need?',
           'unknown_error_occurred': 'Unknown error occurred',
           'browse_service': 'Browse Service',
+          'browse_service_from': 'Browse Service From',
           'post_work': 'Post Work',
           'light': 'Light',
           'dark': 'Dark',
@@ -127,8 +128,8 @@ class AppTranslations extends Translations {
           'dec': 'Dec',
           'description': 'Description',
           'task_accepted': 'Task Accepted',
-          'handyman_arrived': 'Handyman Arrived',
-          'task_start': 'Task Start',
+          'handyman_arrived': 'Serviceman Arrived',
+          'task_start': 'Task Started',
           'task_completed': 'Task Completed',
           'past_task': 'Past Task',
           'current_task': 'Current Task',
@@ -185,6 +186,11 @@ class AppTranslations extends Translations {
           'password_must_be_6_characters':
               'Password must be at least 6 characters',
           'rate': 'Rate',
+          'track_handyman': 'Track Serviceman',
+          'error_sending_message': 'Error sending message',
+          'please_update_app_to_latest_version':
+              'Please update app to latest version',
+          'update': 'Update',
         },
       };
 }

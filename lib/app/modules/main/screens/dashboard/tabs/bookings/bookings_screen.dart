@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../../../../resources/resources.dart';
 import '../../../../../../app.dart';
 
-class BookingsScreen extends StatelessWidget {
+class BookingsScreen extends StatefulWidget {
   const BookingsScreen({
     super.key,
     required this.cubit,
@@ -16,8 +16,28 @@ class BookingsScreen extends StatelessWidget {
   final ThemeMode? themeMode;
 
   @override
+  State<BookingsScreen> createState() => _BookingsScreenState();
+}
+
+class _BookingsScreenState extends State<BookingsScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      widget.cubit
+        ..getBookings()
+        ..getScheduleBookings();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    bool darkMode = themeMode == ThemeMode.dark;
+    bool darkMode = widget.themeMode == ThemeMode.dark;
 
     return DefaultTabController(
       length: 3,
@@ -26,6 +46,7 @@ class BookingsScreen extends StatelessWidget {
           Container(
             color: Res.colors.materialColor,
             child: TabBar(
+              controller: _tabController,
               indicatorWeight: 4,
               indicatorColor: Res.colors.tabIndicatorColor,
               tabs: [
@@ -37,154 +58,181 @@ class BookingsScreen extends StatelessWidget {
           ),
           Expanded(
             child: TabBarView(
+              controller: _tabController,
               children: [
                 /// Current
-                state.currentBookingsResponseList == null
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : state.currentBookingsResponseList!.isEmpty
-                        ? Center(
-                            child: Text(
-                              Res.string.noDataFound,
-                              style: const TextStyle(
-                                fontSize: 18.0,
+                RefreshIndicator(
+                  onRefresh: () async {
+                    widget.cubit.getBookings();
+                    widget.cubit.getScheduleBookings();
+                  },
+                  child: widget.state.currentBookingsResponseList == null ||
+                          widget.state.currentLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : widget.state.currentBookingsResponseList!.isEmpty
+                          ? Center(
+                              child: Text(
+                                Res.string.noDataFound,
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                ),
                               ),
+                            )
+                          : ListView.separated(
+                              padding: const EdgeInsets.all(16.0),
+                              itemCount: widget
+                                  .state.currentBookingsResponseList!.length,
+                              separatorBuilder: (context, index) {
+                                return const SizedBox(height: 16.0);
+                              },
+                              itemBuilder: (context, index) {
+                                var item = widget
+                                    .state.currentBookingsResponseList![index];
+                                return BookingsItem(
+                                  profileImage: item.profileImg ?? '',
+                                  title:
+                                      '${item.firstName ?? ''} ${item.lastName ?? ''}',
+                                  location: item.address ?? '',
+                                  ratePerHour: item.price?.isNotEmpty == true
+                                      ? '${item.price}/hour'
+                                      : 'NA',
+                                  status: item.bookingStatus == '1'
+                                      ? 'Pending'
+                                      : 'Ongoing',
+                                  onTap: () {
+                                    widget.cubit.goToBookingStatus(
+                                      bookingData: {
+                                        'booking_id': item.bookingId,
+                                        'booking_type':
+                                            BookingType.currentBooking,
+                                        'contact':
+                                            '${item.countryCode}${item.userMobile}'
+                                      },
+                                    );
+                                  },
+                                );
+                              },
                             ),
-                          )
-                        : ListView.separated(
-                            padding: const EdgeInsets.all(16.0),
-                            itemCount:
-                                state.currentBookingsResponseList!.length,
-                            separatorBuilder: (context, index) {
-                              return const SizedBox(height: 16.0);
-                            },
-                            itemBuilder: (context, index) {
-                              var item =
-                                  state.currentBookingsResponseList![index];
-                              return BookingsItem(
-                                profileImage: item.profileImg ?? '',
-                                title:
-                                    '${item.firstName ?? ''}, ${item.lastName ?? ''}',
-                                dateTime:
-                                    Helpers.bookingsDateTime(item.createdOn),
-                                location: item.address ?? '',
-                                ratePerHour: item.price?.isNotEmpty == true
-                                    ? '${item.price}/hour'
-                                    : 'NA',
-                                status: item.bookingStatus == '1'
-                                    ? 'Pending'
-                                    : 'Ongoing',
-                                onTap: () {
-                                  cubit.goToBookingStatus(
-                                    bookingData: {
-                                      'booking_id': item.bookingId,
-                                      'booking_type':
-                                          BookingType.currentBooking,
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                          ),
+                ),
 
                 /// Past
-                state.pastBookingsResponseList == null
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : state.pastBookingsResponseList!.isEmpty
-                        ? Center(
-                            child: Text(
-                              Res.string.noDataFound,
-                              style: const TextStyle(
-                                fontSize: 18.0,
+                RefreshIndicator(
+                  onRefresh: () async {
+                    widget.cubit.getBookings();
+                    widget.cubit.getScheduleBookings();
+                  },
+                  child: widget.state.pastBookingsResponseList == null ||
+                          widget.state.pastLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : widget.state.pastBookingsResponseList!.isEmpty
+                          ? Center(
+                              child: Text(
+                                Res.string.noDataFound,
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                ),
                               ),
+                            )
+                          : ListView.separated(
+                              padding: const EdgeInsets.all(16.0),
+                              itemCount:
+                                  widget.state.pastBookingsResponseList!.length,
+                              separatorBuilder: (context, index) {
+                                return const SizedBox(height: 16.0);
+                              },
+                              itemBuilder: (context, index) {
+                                var item = widget
+                                    .state.pastBookingsResponseList![index];
+                                return BookingsItem(
+                                  profileImage: item.profileImg ?? '',
+                                  title:
+                                      '${item.firstName ?? ''}, ${item.lastName ?? ''}',
+                                  location: item.address ?? '',
+                                  ratePerHour: item.price?.isNotEmpty == true
+                                      ? '${item.price}/hour'
+                                      : 'NA',
+                                  status: 'Completed',
+                                  onTap: () {
+                                    widget.cubit.goToBookingStatus(
+                                      bookingData: {
+                                        'booking_id': item.bookingId,
+                                        'booking_type': BookingType.pastBooking,
+                                        'contact':
+                                            '${item.countryCode}${item.userMobile}'
+                                      },
+                                    );
+                                  },
+                                );
+                              },
                             ),
-                          )
-                        : ListView.separated(
-                            padding: const EdgeInsets.all(16.0),
-                            itemCount: state.pastBookingsResponseList!.length,
-                            separatorBuilder: (context, index) {
-                              return const SizedBox(height: 16.0);
-                            },
-                            itemBuilder: (context, index) {
-                              var item = state.pastBookingsResponseList![index];
-                              return BookingsItem(
-                                profileImage: item.profileImg ?? '',
-                                title:
-                                    '${item.firstName ?? ''}, ${item.lastName ?? ''}',
-                                dateTime:
-                                    Helpers.bookingsDateTime(item.createdOn),
-                                location: item.address ?? '',
-                                ratePerHour: item.price?.isNotEmpty == true
-                                    ? '${item.price}/hour'
-                                    : 'NA',
-                                status: 'Completed',
-                                onTap: () {
-                                  cubit.goToBookingStatus(
-                                    bookingData: {
-                                      'booking_id': item.bookingId,
-                                      'booking_type': BookingType.pastBooking,
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                          ),
+                ),
 
                 /// Upcoming
-                state.scheduleBookingsResponseList == null
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : state.scheduleBookingsResponseList!.isEmpty
-                        ? Center(
-                            child: Text(
-                              Res.string.noDataFound,
-                              style: const TextStyle(
-                                fontSize: 18.0,
+                RefreshIndicator(
+                  onRefresh: () async {
+                    widget.cubit.getBookings();
+                    widget.cubit.getScheduleBookings();
+                  },
+                  child: widget.state.scheduleBookingsResponseList == null ||
+                          widget.state.upcomingLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : widget.state.scheduleBookingsResponseList!.isEmpty
+                          ? Center(
+                              child: Text(
+                                Res.string.noDataFound,
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                ),
                               ),
-                            ),
-                          )
-                        : ListView.separated(
-                            padding: const EdgeInsets.all(16.0),
-                            itemCount:
-                                state.scheduleBookingsResponseList!.length,
-                            separatorBuilder: (context, index) {
-                              return const SizedBox(height: 16.0);
-                            },
-                            itemBuilder: (context, index) {
-                              var item =
-                                  state.scheduleBookingsResponseList![index];
+                            )
+                          : ListView.separated(
+                              padding: const EdgeInsets.all(16.0),
+                              itemCount: widget
+                                  .state.scheduleBookingsResponseList!.length,
+                              separatorBuilder: (context, index) {
+                                return const SizedBox(height: 16.0);
+                              },
+                              itemBuilder: (context, index) {
+                                var item = widget
+                                    .state.scheduleBookingsResponseList![index];
 
-                              return BookingsItem(
-                                profileImage: '',
-                                title:
-                                    '${item.firstName ?? ''}, ${item.lastName ?? ''}',
-                                dateTime:
-                                    Helpers.bookingsDateTime(item.createdOn),
-                                location: item.address ?? '',
-                                ratePerHour: item.price?.isNotEmpty == true
-                                    ? '${item.price}/hour'
-                                    : 'NA',
-                                status: item.bookingStatus == '1'
-                                    ? 'Pending'
-                                    : 'Ongoing',
-                                scheduled:
-                                    'Schedule at ${item.scheduleDate} ${item.scheduleTime}',
-                                onTap: () {
-                                  cubit.goToBookingStatus(
-                                    bookingData: {
-                                      'booking_id': item.bookingId,
-                                      'booking_type':
-                                          BookingType.upcomingBooking,
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                          ),
+                                return BookingsItem(
+                                  profileImage: '',
+                                  title:
+                                      '${item.firstName ?? ''}, ${item.lastName ?? ''}',
+                                  dateTime: Helpers.getScheduleDateTime(
+                                    scheduleDate: item.scheduleDate,
+                                    scheduleTime: item.scheduleTime,
+                                  ),
+                                  location: item.address ?? '',
+                                  ratePerHour: item.price?.isNotEmpty == true
+                                      ? '${item.price}/hour'
+                                      : 'NA',
+                                  status: item.bookingStatus == '1'
+                                      ? 'Pending'
+                                      : 'Ongoing',
+                                  scheduled:
+                                      'Schedule at ${item.scheduleDate} ${item.scheduleTime}',
+                                  onTap: () {
+                                    widget.cubit.goToBookingStatus(
+                                      bookingData: {
+                                        'booking_id': item.bookingId,
+                                        'booking_type':
+                                            BookingType.upcomingBooking,
+                                        'contact': null,
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                ),
               ],
             ),
           ),

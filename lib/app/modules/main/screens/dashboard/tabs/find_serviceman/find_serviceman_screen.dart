@@ -67,9 +67,10 @@ class FindServicemanScreen extends StatelessWidget {
                 children: [
                   SvgPicture.asset(
                     Res.drawable.search,
-                    color: darkMode
-                        ? Res.colors.darkSearchHintColor
-                        : Res.colors.lightSearchHintColor,
+                    color: Res.colors.materialColor,
+                    // color: darkMode
+                    //     ? Res.colors.darkSearchHintColor
+                    //     : Res.colors.lightSearchHintColor,
                   ),
                   const SizedBox(width: 12.0),
                   Expanded(
@@ -83,6 +84,7 @@ class FindServicemanScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         isDense: true,
                         border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
                         hintText: Res.string.whatDoYouNeed,
                         hintStyle: TextStyle(
                           color: darkMode
@@ -144,6 +146,8 @@ class FindServicemanScreen extends StatelessWidget {
                                   },
                                   height: 48,
                                   width: 48,
+                                  memCacheHeight: 128,
+                                  memCacheWidth: 128,
                                 ),
                                 const SizedBox(height: 16.0),
                                 Text(

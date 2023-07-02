@@ -64,6 +64,7 @@ class BookServicemanScreen extends StatelessWidget {
                                       BookServicemanType.later
                                   ? BookingType.upcomingBooking
                                   : BookingType.currentBooking,
+                              'book_handyman': true,
                             },
                           );
                         },

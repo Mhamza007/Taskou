@@ -7,6 +7,10 @@ class ForgotPasswordState extends Equatable {
     this.hint,
     this.maxLength,
     this.examplePhoneNumber,
+    this.status = VerifyStatus.loaded,
+    this.authStatus = AuthStatus.none,
+    this.authMessage = '',
+    this.verificationId,
   });
 
   final String? countryCode;
@@ -14,22 +18,10 @@ class ForgotPasswordState extends Equatable {
   final String? hint;
   final int? maxLength;
   final String? examplePhoneNumber;
-
-  ForgotPasswordState copyWith({
-    String? countryCode,
-    String? flag,
-    String? hint,
-    int? maxLength,
-    String? examplePhoneNumber,
-  }) {
-    return ForgotPasswordState(
-      countryCode: countryCode ?? this.countryCode,
-      flag: flag ?? this.flag,
-      hint: hint ?? this.hint,
-      maxLength: maxLength ?? this.maxLength,
-      examplePhoneNumber: examplePhoneNumber ?? this.examplePhoneNumber,
-    );
-  }
+  final VerifyStatus status;
+  final AuthStatus authStatus;
+  final String authMessage;
+  final String? verificationId;
 
   @override
   List<Object?> get props => [
@@ -37,5 +29,33 @@ class ForgotPasswordState extends Equatable {
         flag,
         hint,
         maxLength,
+        status,
+        authStatus,
+        authMessage,
+        verificationId,
       ];
+
+  ForgotPasswordState copyWith({
+    String? countryCode,
+    String? flag,
+    String? hint,
+    int? maxLength,
+    String? examplePhoneNumber,
+    VerifyStatus? status,
+    AuthStatus? authStatus,
+    String? authMessage,
+    String? verificationId,
+  }) {
+    return ForgotPasswordState(
+      countryCode: countryCode ?? this.countryCode,
+      flag: flag ?? this.flag,
+      hint: hint ?? this.hint,
+      maxLength: maxLength ?? this.maxLength,
+      examplePhoneNumber: examplePhoneNumber ?? this.examplePhoneNumber,
+      status: status ?? this.status,
+      authStatus: authStatus ?? this.authStatus,
+      authMessage: authMessage ?? this.authMessage,
+      verificationId: verificationId ?? this.verificationId,
+    );
+  }
 }
