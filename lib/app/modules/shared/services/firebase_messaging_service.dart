@@ -165,3 +165,8 @@ Future<void> sendPushNotification({
     debugPrint('exception $e');
   }
 }
+
+Future<String?> getFCMToken() async {
+  var fcmToken = await FirebaseMessaging.instance.getToken();
+  return fcmToken;
+}

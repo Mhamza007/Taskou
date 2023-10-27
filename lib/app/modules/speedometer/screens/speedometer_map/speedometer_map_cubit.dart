@@ -41,6 +41,8 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
   late FirebaseDatabase _firebaseDatabase;
   late DatabaseReference _databaseReference;
 
+  void back() => Navigator.pop(context);
+
   void _getTrackingMode() {
     trackingMode = data['mode'];
     emit(
@@ -241,14 +243,8 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
   Future<void> goToCurrentLocation() async {
     var locationData = await getCurrentLocation();
     if (locationData != null) {
-      if (trackingMode == TrackingMode.childMode) {
-        _startLocationService();
-      } else if (trackingMode == TrackingMode.relativeMode ||
-          trackingMode == TrackingMode.trackHandyman) {
-        _trackChildLocation();
-      }
       if (locationData.latitude != null && locationData.longitude != null) {
-        state.googleMapController?.animateCamera(
+        await state.googleMapController?.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(
               target: LatLng(
@@ -262,6 +258,12 @@ class SpeedometerMapCubit extends Cubit<SpeedometerMapState> {
       } else {
         // Error
         debugPrint('goToCurrentLocation lat lon null');
+      }
+      if (trackingMode == TrackingMode.childMode) {
+        _startLocationService();
+      } else if (trackingMode == TrackingMode.relativeMode ||
+          trackingMode == TrackingMode.trackHandyman) {
+        _trackChildLocation();
       }
     } else {
       // Error

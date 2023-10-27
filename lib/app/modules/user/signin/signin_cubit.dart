@@ -5,6 +5,7 @@ import 'package:country_picker/src/utils.dart' as country_picker;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:location/location.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../../configs/configs.dart';
@@ -30,6 +31,7 @@ class SignInCubit extends Cubit<SignInState> {
   late final FormGroup signInForm;
   late final UserApi _userApi;
   late final db.UserStorage _userStorage;
+  final Location _location = Location();
 
   Future<void> onSignInPressed() async {
     if (signInForm.valid) {
@@ -44,8 +46,9 @@ class SignInCubit extends Cubit<SignInState> {
         );
         var isConnected = await NetworkService().getConnectivity();
         if (isConnected) {
+          var deviceToken = await getFCMToken();
           signInForm.patchValue({
-            AuthForms.deviceTokenControl: Constants.testDeviceToken,
+            AuthForms.deviceTokenControl: deviceToken,
           });
           debugPrint('${signInForm.value}');
 
@@ -254,5 +257,33 @@ class SignInCubit extends Cubit<SignInState> {
   void signup() {
     debugPrint('sign up');
     Navigator.pushNamed(context, Routes.signUp);
+  }
+
+  Future<void> locationPermission() async {
+    LocationData? locationData;
+    try {
+      var serviceEnabled = await _location.serviceEnabled();
+      if (serviceEnabled) {
+        var permissionStatus = await _location.hasPermission();
+        if (permissionStatus == PermissionStatus.granted) {
+          var bgMode = await _location.enableBackgroundMode();
+          if (bgMode) {
+            locationData = await _location.getLocation();
+          } else {
+            locationPermission();
+          }
+        } else {
+          await _location.requestPermission();
+          locationPermission();
+        }
+      } else {
+        await _location.requestService();
+        locationPermission();
+      }
+    } catch (_) {
+      locationData = null;
+    }
+
+    debugPrint('locationData: $locationData');
   }
 }

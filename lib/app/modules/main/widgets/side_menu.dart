@@ -12,6 +12,7 @@ class SideMenu extends StatelessWidget {
     this.homeTap,
     this.supportTap,
     this.helpTap,
+    this.changeLanguageTap,
     this.logoutTap,
   });
 
@@ -21,6 +22,7 @@ class SideMenu extends StatelessWidget {
   final Function()? homeTap;
   final Function()? supportTap;
   final Function()? helpTap;
+  final Function()? changeLanguageTap;
   final Function()? logoutTap;
 
   @override
@@ -82,6 +84,10 @@ class SideMenu extends StatelessWidget {
             _drawerItem(
               title: Res.string.help,
               onTap: helpTap,
+            ),
+            _drawerItem(
+              title: Res.string.changeLanguage,
+              onTap: changeLanguageTap,
             ),
             _drawerItem(
               title: Res.string.logout,

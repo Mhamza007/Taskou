@@ -1,7 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../../db/db.dart';
@@ -295,6 +299,66 @@ class BookServicemanCubit extends Cubit<BookServicemanState> {
   }
 
   Future<void> getAddress() async {
+    try {
+      const kGoogleApiKey = "AIzaSyDkRtN_gPTXNm_0tWiFJ4AGnMY-jQLpXik";
+
+      var p = await PlacesAutocomplete.show(
+        context: context,
+        apiKey: kGoogleApiKey,
+        mode: Mode.overlay,
+        language: 'en',
+        types: [],
+        components: [],
+        strictbounds: false,
+        onError: (e) {},
+        decoration: InputDecoration(
+          hintText: Res.string.enterAddress,
+          hintStyle: TextStyle(
+            color: Res.colors.whiteColor,
+          ),
+        ),
+      );
+
+      if (p != null) {
+        debugPrint('prediction: ${p.toJson()}');
+
+        GoogleMapsPlaces places = GoogleMapsPlaces(
+          apiKey: kGoogleApiKey,
+          // apiHeaders: await const GoogleApiHeaders().getHeaders(),
+        );
+        PlacesDetailsResponse detail =
+            await places.getDetailsByPlaceId(p.placeId!);
+        final lat = detail.result.geometry!.location.lat;
+        final lng = detail.result.geometry!.location.lng;
+
+        debugPrint('latlng: $lat , $lng');
+        if (state.servicemanType == BookServicemanType.now) {
+          bookNowForm.patchValue(
+            {
+              PostWorkForms.userLat: '$lat',
+              PostWorkForms.userLong: '$lng',
+              PostWorkForms.address: '${p.description}',
+            },
+          );
+        } else if (state.servicemanType == BookServicemanType.later) {
+          bookLaterForm.patchValue(
+            {
+              PostWorkForms.userLat: '$lat',
+              PostWorkForms.userLong: '$lng',
+              PostWorkForms.address: '${p.description}',
+            },
+          );
+        }
+      }
+    } catch (e) {
+      Helpers.errorSnackBar(
+        context: context,
+        title: Res.string.errorWhileGettingLocation,
+      );
+    }
+  }
+
+  Future<void> getAddress1() async {
     var location = await Navigator.pushNamed(
       context,
       Routes.placesSearch,

@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../configs/configs.dart';
 import '../../../../resources/resources.dart';
@@ -41,8 +42,9 @@ class SignUpCubit extends Cubit<SignUpState> {
         );
         var isConnected = await NetworkService().getConnectivity();
         if (isConnected) {
+          var deviceToken = await getFCMToken();
           signUpForm.patchValue({
-            AuthForms.deviceTokenControl: Constants.testDeviceToken,
+            AuthForms.deviceTokenControl: deviceToken,
           });
           debugPrint('${signUpForm.value}');
 
@@ -316,6 +318,16 @@ class SignUpCubit extends Cubit<SignUpState> {
   void signin() {
     debugPrint('sign in');
     Navigator.pushNamedAndRemoveUntil(context, Routes.signIn, (route) => false);
+  }
+
+  void openPrivacyPolicy() async {
+    try {
+      launchUrl(
+        Uri.parse(
+          'https://docs.google.com/document/d/1wDTnj02Hnx6yL7yUvlZlFjwxfJ0EI6eU/edit?usp=sharing&ouid=115202526282087628864&rtpof=true&sd=true',
+        ),
+      );
+    } catch (_) {}
   }
 
   Future<void> _continueWithFirebaseResponse(

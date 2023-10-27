@@ -20,3 +20,5 @@ export 'status_message_response.dart';
 export 'verify_forgot_password_otp_response.dart';
 export 'forgot_password_response.dart';
 export 'get_handyman_by_id_response.dart';
+export 'handyman_review_response.dart';
+export 'handyman_details_by_id_response.dart';

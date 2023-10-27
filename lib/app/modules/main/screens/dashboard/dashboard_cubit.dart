@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
 import '../../../../../db/db.dart';
 import '../../../../../resources/resources.dart';
@@ -21,7 +23,7 @@ class DashboardCubit extends Cubit<DashboardState> {
     emit(
       state.copyWith(
         themeMode: Res.appTheme.getThemeMode(),
-        currentPageTitle: Res.string.findServiceman,
+        currentPageTitle: Res.string.appTitle,
       ),
     );
 
@@ -89,7 +91,7 @@ class DashboardCubit extends Cubit<DashboardState> {
             ? Res.string.bookings
             : index == 2
                 ? Res.string.profile
-                : Res.string.findServiceman,
+                : Res.string.appTitle,
       ),
     );
   }
@@ -285,6 +287,47 @@ class DashboardCubit extends Cubit<DashboardState> {
   Future<void> help() async {
     Navigator.pop(context);
     Navigator.pushNamed(context, Routes.help);
+  }
+
+  void changeLanguage() {
+    var language = AppLanguage.en;
+    var locale = Res.appTranslations.getLocale();
+    if (locale == const Locale('fr')) {
+      language = AppLanguage.fr;
+    }
+
+    Get.back();
+
+    Get.dialog(
+      CupertinoAlertDialog(
+        title: Text(Res.string.changeLanguage),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioMenuButton(
+              value: AppLanguage.en,
+              groupValue: language,
+              onChanged: (AppLanguage? appLanguage) async {
+                language = AppLanguage.en;
+                await Res.appTranslations.updateLocale(langCode: 'en');
+                Get.back();
+              },
+              child: const Text('English'),
+            ),
+            RadioMenuButton(
+              value: AppLanguage.fr,
+              groupValue: language,
+              onChanged: (AppLanguage? appLanguage) async {
+                language = AppLanguage.fr;
+                await Res.appTranslations.updateLocale(langCode: 'fr');
+                Get.back();
+              },
+              child: const Text('Français'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> logout() async {

@@ -100,6 +100,8 @@ class OtpCubit extends Cubit<OtpState> {
           otp: '$otp',
         ),
       );
+
+      verifyOtp();
     }
   }
 

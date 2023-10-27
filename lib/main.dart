@@ -8,6 +8,7 @@ import 'package:taskou/firebase_options.dart';
 
 import 'app/app.dart';
 import 'db/db.dart';
+import 'resources/resources.dart';
 import 'resources/values/values.dart';
 
 Future<void> main() async {
@@ -18,8 +19,10 @@ Future<void> main() async {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
+      await GetStorage.init();
       await GetStorage.init(USER_BOX);
       await GetStorage.init(THEME_BOX);
+      await Res.appTranslations.initLocale();
 
       if (kReleaseMode) {
         CustomImageCache();

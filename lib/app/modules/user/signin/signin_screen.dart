@@ -8,6 +8,8 @@ import 'package:reactive_forms/reactive_forms.dart' as forms;
 import '../../../../resources/resources.dart';
 import '../../../app.dart';
 
+bool disclosure = false;
+
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
 
@@ -40,6 +42,23 @@ class SignInScreen extends StatelessWidget {
           },
           builder: (context, state) {
             var signInCubit = context.read<SignInCubit>();
+
+            if (!disclosure) {
+              Future.delayed(
+                Duration.zero,
+                () async {
+                  await DialogUtil.showDialogWithOKButton(
+                    context,
+                    title: Res.string.bgLocationDialogTitle,
+                    message: Res.string.bgLocationDialogDescription,
+                    barrierDismissible: false,
+                  );
+                  await signInCubit.locationPermission();
+                },
+              );
+              disclosure = true;
+            }
+
             return AbsorbPointer(
               absorbing: state.status == SignInStatus.signInLoading,
               child: GestureDetector(

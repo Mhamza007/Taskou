@@ -66,6 +66,10 @@ dependencies:
   cloud_firestore: ^4.7.1
   package_info_plus: ^3.1.2
   in_app_update: ^4.0.1
+  intl: ^0.17.0
+  http: ^0.13.6
+  google_maps_webservice: ^0.0.20-nullsafety.5
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:

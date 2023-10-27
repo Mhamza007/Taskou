@@ -161,6 +161,7 @@ class DashboardScreen extends StatelessWidget {
               homeTap: dashboardCubit.home,
               supportTap: dashboardCubit.support,
               helpTap: dashboardCubit.help,
+              changeLanguageTap: dashboardCubit.changeLanguage,
               logoutTap: dashboardCubit.logout,
             ),
             bottomNavigationBar: BottomNavigationBar(

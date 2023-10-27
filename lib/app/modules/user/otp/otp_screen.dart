@@ -48,10 +48,10 @@ class OtpScreen extends StatelessWidget {
           },
           builder: (context, state) {
             var otpCubit = context.read<OtpCubit>();
-            return AbsorbPointer(
-              absorbing: state.status == VerifyStatus.loading,
-              child: GestureDetector(
-                onTap: Helpers.unFocus,
+            return GestureDetector(
+              onTap: Helpers.unFocus,
+              child: AbsorbPointer(
+                absorbing: state.status == VerifyStatus.loading,
                 child: SafeArea(
                   child: Column(
                     children: [
@@ -96,7 +96,8 @@ class OtpScreen extends StatelessWidget {
                                   child: Pinput(
                                     controller: otpCubit.pinController,
                                     length: 4,
-                                    autofocus: true,
+                                    closeKeyboardWhenCompleted: true,
+                                    textInputAction: TextInputAction.done,
                                     keyboardType: TextInputType.number,
                                     inputFormatters: [
                                       FilteringTextInputFormatter.digitsOnly,

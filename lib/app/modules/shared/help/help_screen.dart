@@ -40,6 +40,14 @@ class HelpScreen extends StatelessWidget {
                   height: 0,
                 ),
                 _buildListTile(
+                  title: Res.string.changeLanguage,
+                  onTap: cubit.changeLanguage,
+                ),
+                const Divider(
+                  thickness: 2,
+                  height: 0,
+                ),
+                _buildListTile(
                   title: Res.string.faq,
                 ),
                 const Divider(

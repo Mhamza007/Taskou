@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -26,6 +27,8 @@ class FindServicemanScreen extends StatelessWidget {
     bool darkMode = themeMode == ThemeMode.dark;
     List<CategoriesResponseData>? resultList =
         state.isSearching ? state.filterList : state.categories;
+
+    var iconSize = MediaQuery.of(context).size.width / 6.5;
 
     return Container(
       color: darkMode
@@ -144,14 +147,15 @@ class FindServicemanScreen extends StatelessWidget {
                                   errorWidget: (context, url, error) {
                                     return const Icon(Icons.error);
                                   },
-                                  height: 48,
-                                  width: 48,
+                                  height: iconSize,
+                                  width: iconSize,
                                   memCacheHeight: 128,
                                   memCacheWidth: 128,
                                 ),
                                 const SizedBox(height: 16.0),
-                                Text(
+                                AutoSizeText(
                                   item.categoryName ?? '',
+                                  maxLines: 1,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: darkMode
@@ -159,8 +163,17 @@ class FindServicemanScreen extends StatelessWidget {
                                         : Res.colors.textColor,
                                   ),
                                 ),
+                                // Text(
+                                //   item.categoryName ?? '',
+                                //   textAlign: TextAlign.center,
+                                //   style: TextStyle(
+                                //     color: darkMode
+                                //         ? Res.colors.textColorDark
+                                //         : Res.colors.textColor,
+                                //   ),
+                                // ),
                               ],
-                            ),
+                            ).marginAll(4.0),
                           ),
                         ),
                       );

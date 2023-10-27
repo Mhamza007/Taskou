@@ -8,26 +8,32 @@ class AppTranslations extends Translations {
   final locale = const Locale('en');
 
   // fallbackLocale saves the day when the locale gets in trouble
-  final fallbackLocale = const Locale('en');
+  final fallbackLocale = const Locale('fr');
 
   // Key
   static const String LANGUAGE = 'LANGUAGE';
 
-  Future<void> init() async {
+  Future<void> initLocale() async {
     final box = GetStorage();
     String? locale = box.read(LANGUAGE);
     if (locale == null) {
-      Get.updateLocale(const Locale('en'));
-      await box.write(LANGUAGE, 'en');
+      Get.updateLocale(const Locale('fr'));
+      await box.write(LANGUAGE, 'fr');
     } else {
       Get.updateLocale(Locale(locale));
     }
   }
 
-  static void updateLocale({required String langCode}) {
+  Locale getLocale() {
+    final box = GetStorage();
+    String? locale = box.read(LANGUAGE);
+    return Locale(locale ?? 'fr');
+  }
+
+  Future<void> updateLocale({required String langCode}) async {
     final box = GetStorage();
     Get.updateLocale(Locale(langCode));
-    box.write(LANGUAGE, langCode);
+    await box.write(LANGUAGE, langCode);
   }
 
   @override
@@ -191,6 +197,182 @@ class AppTranslations extends Translations {
           'please_update_app_to_latest_version':
               'Please update app to latest version',
           'update': 'Update',
+          'change_language': 'Change Language',
+          'reviews': 'Reviews',
+          'work_photos': 'Work Photos',
+          'bg_location_dialog_title': 'Background Location Disclosure',
+          'bg_location_dialog_description':
+              'Taskou Pro will use the location of the app in background while the user is in tracking mode, even if the app is not in focus',
+        },
+        'fr': {
+          'app_title': 'Taskou',
+          'you_are in offline_mode':
+              'Vous êtes hors ligne. Vérifiez votre connexion',
+          'error_signing_in': 'Une erreur s’est produite lors de la connexion',
+          'signed_in_successfully': 'Connecté avec succés',
+          'phone_number': 'Numéro de téléphone',
+          'password': 'Mot de passe',
+          'forgot_password': 'Mot de passe oublié?',
+          'login': 'Se connecter',
+          'child_mode': 'Mode enfant',
+          'dont_have_an_account': 'Vous n’avez pas de compte?',
+          'signup': 'S’inscrire',
+          'this_field_is_required': 'Champ requis',
+          'invalid_phone_number': 'Numéro de téléphone invalide',
+          'last_name': 'Nom',
+          'enter_last_name': 'Entrer le nom',
+          'first_name': 'Prénom',
+          'enter_first_name': 'Entrer le prénom',
+          'enter_password': 'Entrer le mot de passe',
+          'email': 'E-mail',
+          'email_optional': 'E-mail (Opt)',
+          'enter_email': 'Entrer e-mail',
+          'city': 'Ville',
+          'enter_city': 'Entrer la ville',
+          'province': 'Wilaya',
+          'enter_province': 'Wilaya',
+          'zip_code': 'Code postal',
+          'enter_zip_code': 'Entrer code postal',
+          'price_per_hour': 'Tarif par heure (\$)',
+          'price': 'Tarif',
+          'by_signing_up_you_agree_to_our':
+              'En vous s’inscrivant vous acceptez nos',
+          'terms_conditions': 'Termes & Conditions',
+          'and': 'et',
+          'privacy_policy': 'Privacy Policy',
+          'register': 'S’inscrir',
+          'already_have_an_account': 'Vous avez déjà un compte?',
+          'signin': 'Se connecter',
+          'send': 'Envoyer',
+          'enter_your_mobile_number': 'Enterer votre numéro de téléphone',
+          'sign_up_successful': 'Inscription réussie',
+          'error_signing_up': 'Erreur d’inscription',
+          'otp': 'OTP',
+          'otp_sent_to': 'OTP envoyé',
+          'verify': 'Vérifier',
+          'error_verifying_otp': 'Erreur de vérification OTP',
+          'otp_verified_successfully': 'OTP Vérifié avec succès',
+          'user_not_verified': 'Utilisateur non vérifié',
+          'find_serviceman': 'Prestataires',
+          'bookings': 'Réservations',
+          'profile': 'Profil',
+          'home': 'Acceuil',
+          'support': 'Support',
+          'help': 'Centre d’aide',
+          'logout': 'Se déconnecter',
+          'what_do_you_need': 'Rechercher un service',
+          'unknown_error_occurred': 'Une erreur inconnue s’est produite',
+          'browse_service': 'Prestataires',
+          'browse_service_from': 'Par ville ',
+          'post_work': 'Post Work',
+          'light': 'light',
+          'dark': 'dark',
+          'edit': 'Modifier',
+          'save': 'Sauvegarder',
+          'resend': 'Renvoyer',
+          'current': 'En cours',
+          'past': 'Terminées',
+          'upcoming': 'Futur',
+          'available_servicemen': 'Prestataires disponibles',
+          'certified': 'Certifié',
+          'jobs': 'Métier',
+          'user_auth_failed_login_again':
+              'L’authentification de l’utilisateur à échoué, veuillez vous reconnecter',
+          'no_data_found': 'Aucune donnée disponible',
+          'view_profile': 'Voir le profil',
+          'book': 'Réserver',
+          'advertising_communaction': 'Publicité & Communicaction',
+          'email_address': 'Adresse e-mail',
+          'enter_your_message': 'Entrer votre message',
+          'book_serviceman': 'Réserver',
+          'am': 'AM',
+          'pm': 'PM',
+          'jan': 'Jan',
+          'feb': 'Fev',
+          'mar': 'Mar',
+          'apr': 'Avr',
+          'may': 'Mai',
+          'jun': 'Jun',
+          'jul': 'Jul',
+          'aug': 'Aou',
+          'sep': 'Sep',
+          'oct': 'Oct',
+          'nov': 'Nov',
+          'dec': 'Dec',
+          'description': 'Description',
+          'task_accepted': 'Demande acceptée',
+          'handyman_arrived': 'Prestataire arrivé',
+          'task_start': 'Service commencé',
+          'task_completed': 'Service terminé',
+          'past_task': 'Terminées',
+          'current_task': 'En cours',
+          'upcoming_task': 'Futur',
+          'review': 'Noter le service',
+          'success': 'Succés',
+          'please_assign_ratings': 'Veuillez attribuer des notes',
+          'please_enter_your_message': 'Entrer votre message',
+          'ok': 'Ok',
+          'enter_address': 'Entrez votre adresse',
+          'search': 'Recherche',
+          'share_code': 'Partager le code',
+          'delete': 'Supprimer',
+          'tracking': 'Tracking',
+          'add': 'Ajouter',
+          'child_name': 'Nom de l’enfant',
+          'enter_child_name': 'Entrer le nom de l’enfant',
+          'relation': 'Relation',
+          'enter_relation': 'Entrer la Relation',
+          'child': 'Enfant',
+          'employee': 'Employé',
+          'cancel': 'Annuler',
+          'error_logging_out':
+              'Une erreur s’est produite lors de la déconnexion',
+          'submit': 'Envoyer',
+          'enter_code_here': 'Entrer votre code ici',
+          'tracking_question':
+              'Voules-vous suivre votre position et Vitesse avec vos parents?',
+          'yes': 'Oui',
+          'no': 'Non',
+          'off': 'off',
+          'stop': 'Stop',
+          'not_found': 'Incorrect',
+          'location_background_notification_message':
+              'Taskou exécute la géolocalisation en arriére-plan',
+          'last_updated': 'Derniére mise à jour:',
+          'when_you_need_serviceman': 'Quand avez-vous besoin de prestataire?',
+          'now': 'Maintenenat',
+          'later': 'Plus tard',
+          'error_while_getting_location':
+              'Erreur lors de l’obtention de l’emplacement',
+          'book_handyman_alert_message': 'Reserver ce prestataire?',
+          'enter_time': 'L’heure',
+          'let_us_know_what_you_think': 'De quoi avez-vous besoin',
+          'settings': 'Paramétres',
+          'change_password': 'Changer le mot de passe',
+          'faq': 'FAQ',
+          'old_password': 'Ancien mot de passe',
+          'enter_old_password': 'Entrer l’ancien mot de passe',
+          'new_password': 'Nouveau mot de passe',
+          'enter_new_password': 'Entrer le nouveau mot de passe',
+          'confirm_password': 'Confimer le mot de passe',
+          're_enter_password': 'Entrer à nouveau le mot de passe',
+          'new_and_confirm_passwords_not_matched':
+              'Les mots de passe ne correspondent pas',
+          'password_must_be_6_characters':
+              'Le mot de passe doit contenir 6 caractères',
+          'rate': 'Tarif',
+          'track_handyman': 'Tracking',
+          'error_sending_message': 'Erreur d’envoi de message',
+          'please_update_app_to_latest_version':
+              'Veuillez mettre à jour l’application',
+          'update': 'Mise à jour',
+          'change_language': 'Language',
+          'reviews': 'Commentaires',
+          'work_photos': 'Photos de travail',
+          'bg_location_dialog_title':
+              'Divulgation de l\'emplacement en arrière-plan',
+          'bg_location_dialog_description':
+              'Taskou Pro utilisera l\'emplacement de l\'application en arrière-plan pendant que l\'utilisateur est en mode suivi, même si l\'application n\'est pas au point',
         },
       };
 }

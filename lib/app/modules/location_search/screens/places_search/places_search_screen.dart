@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../../../resources/resources.dart';
 import '../../../../app.dart';
@@ -21,11 +22,27 @@ class PlacesSearchScreen extends StatelessWidget {
               child: Column(
                 children: [
                   /// Search bar
-                  SearchBar(
-                    controller: cubit.searchController,
-                    onSubmitted: cubit.onSubmitted,
-                    onChanged: cubit.onChanged,
-                    autoFocus: true,
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: cubit.back,
+                        child: SvgPicture.asset(
+                          Res.drawable.back,
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.scaleDown,
+                          color: Res.colors.materialColor,
+                        ),
+                      ),
+                      Expanded(
+                        child: SearchBar(
+                          controller: cubit.searchController,
+                          onSubmitted: cubit.onSubmitted,
+                          onChanged: cubit.onChanged,
+                          autoFocus: true,
+                        ),
+                      ),
+                    ],
                   ),
                   Expanded(
                     child: state.isSearching

@@ -99,89 +99,112 @@ class BookServicemanScreen extends StatelessWidget {
               ),
               title: Text(Res.string.bookServiceman),
             ),
-            body: forms.ReactiveForm(
-              formGroup: cubit.bookForm,
-              child: ListView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 40.0,
-                ),
-                children: [
-                  Text(
-                    '${state.browseServiceData?.firstName ?? ''} ${state.browseServiceData?.lastName ?? ''}',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Res.colors.materialColor,
-                      fontSize: 32.0,
-                    ),
+            body: GestureDetector(
+              onTap: () {
+                cubit.bookForm.unfocus();
+                Helpers.unFocus();
+              },
+              child: forms.ReactiveForm(
+                formGroup: cubit.bookForm,
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24.0,
+                    vertical: 40.0,
                   ),
-                  const SizedBox(height: 12.0),
-                  Text(
-                    state.title ?? '',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Res.colors.darkGreyColor,
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  if (state.servicemanType == BookServicemanType.later)
-                    TableCalendar(
-                      focusedDay: state.dateTime ?? DateTime.now(),
-                      firstDay: DateTime.now(),
-                      lastDay: DateTime(2030),
-                      headerStyle: const HeaderStyle(
-                        formatButtonVisible: false,
-                        titleCentered: true,
+                  children: [
+                    Text(
+                      '${state.browseServiceData?.firstName ?? ''} ${state.browseServiceData?.lastName ?? ''}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Res.colors.materialColor,
+                        fontSize: 32.0,
                       ),
-                      rangeSelectionMode: RangeSelectionMode.disabled,
-                      onDaySelected: cubit.onDaySelected,
-                      selectedDayPredicate: (day) {
-                        return isSameDay(
-                          state.dateTime ?? DateTime.now(),
-                          day,
-                        );
-                      },
-                      availableGestures: AvailableGestures.horizontalSwipe,
-                      calendarBuilders: CalendarBuilders(
-                        todayBuilder: (context, day, focusedDay) {
-                          return Center(
-                            child: CircleAvatar(
-                              backgroundColor:
-                                  Res.colors.materialColor.withOpacity(0.2),
-                              child: Text(
-                                '${day.day}',
-                                style: TextStyle(
-                                  color: isDarkMode
-                                      ? Res.colors.textColorDark
-                                      : Res.colors.textColor,
+                    ),
+                    const SizedBox(height: 12.0),
+                    Text(
+                      state.title ?? '',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Res.colors.darkGreyColor,
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    if (state.servicemanType == BookServicemanType.later)
+                      TableCalendar(
+                        focusedDay: state.dateTime ?? DateTime.now(),
+                        firstDay: DateTime.now(),
+                        lastDay: DateTime(2030),
+                        headerStyle: const HeaderStyle(
+                          formatButtonVisible: false,
+                          titleCentered: true,
+                        ),
+                        rangeSelectionMode: RangeSelectionMode.disabled,
+                        onDaySelected: cubit.onDaySelected,
+                        selectedDayPredicate: (day) {
+                          return isSameDay(
+                            state.dateTime ?? DateTime.now(),
+                            day,
+                          );
+                        },
+                        availableGestures: AvailableGestures.horizontalSwipe,
+                        calendarBuilders: CalendarBuilders(
+                          todayBuilder: (context, day, focusedDay) {
+                            return Center(
+                              child: CircleAvatar(
+                                backgroundColor:
+                                    Res.colors.materialColor.withOpacity(0.2),
+                                child: Text(
+                                  '${day.day}',
+                                  style: TextStyle(
+                                    color: isDarkMode
+                                        ? Res.colors.textColorDark
+                                        : Res.colors.textColor,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                        selectedBuilder: (context, day, focusedDay) {
-                          return Center(
-                            child: CircleAvatar(
-                              child: Text(
-                                '${day.day}',
+                            );
+                          },
+                          selectedBuilder: (context, day, focusedDay) {
+                            return Center(
+                              child: CircleAvatar(
+                                child: Text(
+                                  '${day.day}',
+                                ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
+                      ).marginOnly(
+                        bottom: 16.0,
                       ),
-                    ).marginOnly(
-                      bottom: 16.0,
-                    ),
-                  if (state.servicemanType == BookServicemanType.later)
+                    if (state.servicemanType == BookServicemanType.later)
+                      ReactiveTextField(
+                        formControlName: BookServicemanForms.scheduleTime,
+                        readOnly: true,
+                        onTap: (control) {
+                          cubit.pickTime();
+                        },
+                        decoration: InputDecoration(
+                          hintText: Res.string.enterTime,
+                          border: inputBorder,
+                          enabledBorder: inputBorder,
+                        ),
+                        validationMessages: {
+                          forms.ValidationMessage.required: (_) =>
+                              Res.string.thisFieldIsRequired,
+                        },
+                      ).marginOnly(
+                        bottom: 16.0,
+                      ),
                     ReactiveTextField(
-                      formControlName: BookServicemanForms.scheduleTime,
+                      formControlName: BookServicemanForms.address,
                       readOnly: true,
                       onTap: (control) {
-                        cubit.pickTime();
+                        cubit.getAddress();
                       },
                       decoration: InputDecoration(
-                        hintText: Res.string.enterTime,
+                        hintText: Res.string.enterAddress,
                         border: inputBorder,
                         enabledBorder: inputBorder,
                       ),
@@ -189,40 +212,23 @@ class BookServicemanScreen extends StatelessWidget {
                         forms.ValidationMessage.required: (_) =>
                             Res.string.thisFieldIsRequired,
                       },
-                    ).marginOnly(
-                      bottom: 16.0,
                     ),
-                  ReactiveTextField(
-                    formControlName: BookServicemanForms.address,
-                    readOnly: true,
-                    onTap: (control) {
-                      cubit.getAddress();
-                    },
-                    decoration: InputDecoration(
-                      hintText: Res.string.enterAddress,
-                      border: inputBorder,
-                      enabledBorder: inputBorder,
+                    const SizedBox(height: 16.0),
+                    ReactiveTextField(
+                      formControlName: BookServicemanForms.message,
+                      decoration: InputDecoration(
+                        hintText: Res.string.enterYourMessage,
+                        border: inputBorder,
+                        enabledBorder: inputBorder,
+                      ),
+                      maxLines: 6,
+                      validationMessages: {
+                        forms.ValidationMessage.required: (_) =>
+                            Res.string.thisFieldIsRequired,
+                      },
                     ),
-                    validationMessages: {
-                      forms.ValidationMessage.required: (_) =>
-                          Res.string.thisFieldIsRequired,
-                    },
-                  ),
-                  const SizedBox(height: 16.0),
-                  ReactiveTextField(
-                    formControlName: BookServicemanForms.message,
-                    decoration: InputDecoration(
-                      hintText: Res.string.enterYourMessage,
-                      border: inputBorder,
-                      enabledBorder: inputBorder,
-                    ),
-                    maxLines: 6,
-                    validationMessages: {
-                      forms.ValidationMessage.required: (_) =>
-                          Res.string.thisFieldIsRequired,
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             bottomNavigationBar: Container(

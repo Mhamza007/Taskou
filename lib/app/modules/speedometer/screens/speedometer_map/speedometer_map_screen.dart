@@ -29,6 +29,20 @@ class SpeedometerMapScreen extends StatelessWidget {
         builder: (context, state) {
           var cubit = context.read<SpeedometerMapCubit>();
           return Scaffold(
+            appBar: AppBar(
+              leading: InkWell(
+                onTap: cubit.back,
+                child: SvgPicture.asset(
+                  Res.drawable.back,
+                  width: 24,
+                  height: 24,
+                  fit: BoxFit.scaleDown,
+                ),
+              ),
+              title: Text(
+                Res.string.tracking,
+              ),
+            ),
             body: Stack(
               children: [
                 GoogleMap(

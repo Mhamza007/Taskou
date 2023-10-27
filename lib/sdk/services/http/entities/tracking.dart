@@ -94,8 +94,9 @@ class TrackingServiceApi {
     required Map<String, dynamic> data,
   }) async {
     try {
+      var deviceToken = await getFCMToken();
       dioBase?.options.headers.addAll({
-        'user_token': Constants.testDeviceToken,
+        'user_token': deviceToken,
       });
       var response = await dioBase?.post(
         'verifyCode',
